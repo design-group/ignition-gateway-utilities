@@ -2,7 +2,7 @@
 This repository is a collection of utilities for developing in Ignition. The utilities are designed to be run in parallel to the existing project, and can add features like config file access, feature flagging, and more.
 
 ### Installation
-1. Download the latest release asset (`gateway-utilities.zip`) from the [releases page](https://github.com/design-group/Ignition-Gateway-Utilities/releases)
+1. Download the latest release asset (`gateway-utilities.zip`) from the [releases page](https://github.com/design-group/ignition-gateway-utilities/releases)
 2. Import the project into Ignition, either through the gateway webpage or while inside of another project.
 
 
