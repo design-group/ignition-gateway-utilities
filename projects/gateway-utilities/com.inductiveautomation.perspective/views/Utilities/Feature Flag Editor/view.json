@@ -40,7 +40,7 @@
         },
         "transforms": [
           {
-            "code": "\treturn General.FeatureFlags.getFeatureFlagTable()",
+            "code": "\treturn General.FeatureFlags.get_feature_flag_table()",
             "type": "script"
           }
         ],
@@ -129,7 +129,7 @@
               "component": {
                 "onActionPerformed": {
                   "config": {
-                    "script": "\tcategory_id \u003d self.view.custom.selectedFeature.category_id\n\tflag_id \u003d self.view.custom.selectedFeature.flag_id\n\t\n\tGeneral.FeatureFlags.deleteFeatureFlag(category_id, flag_id)\n\tself.props.value \u003d 0\n\tself.view.custom.selectedFeature \u003d {}\n\tself.view.custom.refresh \u003d not self.view.custom.refresh"
+                    "script": "\tcategory_id \u003d self.view.custom.selectedFeature.category_id\n\tflag_id \u003d self.view.custom.selectedFeature.flag_id\n\t\n\tGeneral.FeatureFlags.delete_feature_flag(category_id, flag_id)\n\tself.props.value \u003d 0\n\tself.view.custom.selectedFeature \u003d {}\n\tself.view.custom.refresh \u003d not self.view.custom.refresh"
                   },
                   "scope": "G",
                   "type": "script"
@@ -273,7 +273,7 @@
                   "dom": {
                     "onClick": {
                       "config": {
-                        "script": "\t\n\tcategory_id \u003d self.view.custom.newCategoryId\n\tflag_id \u003d self.view.custom.newFlagId\n\n\t# If either of the entries are blank, just move on.\n\tif (category_id or \u0027\u0027) \u003d\u003d \u0027\u0027 or (flag_id or \u0027\u0027) \u003d\u003d \u0027\u0027:\n\t\treturn\n\t\n\tself.view.custom.newCategoryId \u003d \u0027\u0027\n\tself.view.custom.newFlagId \u003d \u0027\u0027\n\t\n\tGeneral.FeatureFlags.setFeatureFlag(category_id, flag_id, False)\n\t\n\tsystem.perspective.sendMessage(\"addFeatureFlag\", {}, \"view\")\n\tself.view.custom.refresh \u003d not self.view.custom.refresh\n\t"
+                        "script": "\t\n\tcategory_id \u003d self.view.custom.newCategoryId\n\tflag_id \u003d self.view.custom.newFlagId\n\n\t# If either of the entries are blank, just move on.\n\tif (category_id or \u0027\u0027) \u003d\u003d \u0027\u0027 or (flag_id or \u0027\u0027) \u003d\u003d \u0027\u0027:\n\t\treturn\n\t\n\tself.view.custom.newCategoryId \u003d \u0027\u0027\n\tself.view.custom.newFlagId \u003d \u0027\u0027\n\t\n\tGeneral.FeatureFlags.set_feature_flag(category_id, flag_id, False)\n\t\n\tsystem.perspective.sendMessage(\"addFeatureFlag\", {}, \"view\")\n\tself.view.custom.refresh \u003d not self.view.custom.refresh\n\t"
                       },
                       "scope": "G",
                       "type": "script"
@@ -338,7 +338,7 @@
               "component": {
                 "onActionPerformed": {
                   "config": {
-                    "script": "\tfeature_flags \u003d General.FeatureFlags.getFeatureFlags()\n\tfile_data \u003d system.util.jsonEncode(feature_flags)\n\t\n\tsystem.perspective.download(\"feature-flags.json\", file_data)"
+                    "script": "\tfeature_flags \u003d General.FeatureFlags.get_feature_flags()\n\tfile_data \u003d system.util.jsonEncode(feature_flags)\n\t\n\tsystem.perspective.download(\"feature-flags.json\", file_data)"
                   },
                   "scope": "G",
                   "type": "script"
@@ -411,7 +411,7 @@
           "component": {
             "onEditCellCommit": {
               "config": {
-                "script": "\ttable_data \u003d self.props.data\n\t\n\tcategory_id \u003d table_data[event.row][\u0027category_id\u0027]\n\tflag_id \u003d table_data[event.row][\u0027flag_id\u0027]\n\tenabled \u003d event.value\n\t\n\tif event.column \u003d\u003d \"enabled\":\n\t\tGeneral.FeatureFlags.setFeatureFlag(category_id, flag_id, enabled)\n\t\t\n\tself.view.refreshBinding(\"custom.features\")"
+                "script": "\ttable_data \u003d self.props.data\n\t\n\tcategory_id \u003d table_data[event.row][\u0027category_id\u0027]\n\tflag_id \u003d table_data[event.row][\u0027flag_id\u0027]\n\tenabled \u003d event.value\n\t\n\tif event.column \u003d\u003d \"enabled\":\n\t\tGeneral.FeatureFlags.set_feature_flag(category_id, flag_id, enabled)\n\t\t\n\tself.view.refreshBinding(\"custom.features\")"
               },
               "scope": "G",
               "type": "script"
