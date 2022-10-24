@@ -1,6 +1,9 @@
 # Ignore the builtin vscode files
 *.vscode
 
+# Ignore MacOS files
+.DS_Store
+
 # Ignore the theming digest files in your repo
 *.digest.json
 
