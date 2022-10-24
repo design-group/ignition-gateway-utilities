@@ -1,0 +1,28 @@
+# This is a workflow to zip project contents into a release package
+name: Package Release
+
+on:
+  release:
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    
+    name: Package Release
+
+    steps:
+      -
+        name: Checkout 
+        uses: actions/checkout@v2
+      -
+        name: Zip project contents into a dedicated package
+        run: cd ./projects/gateway-utilities && zip -r ../../gateway-utilities.zip *
+
+      - 
+        name: Upload to Release Action
+        uses: Shopify/upload-to-release@v1.0.1
+        with:
+          name: gateway-utilities.zip
+          path: gateway-utilities.zip
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
