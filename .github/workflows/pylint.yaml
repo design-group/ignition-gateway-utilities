@@ -19,4 +19,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        find . -name '*.py' -exec pylint {} \;
+        find . -name '*.py' -exec pylint {} \; | grep -v "Your code has been rated at 10.00/10" && exit 1 || exit 0
