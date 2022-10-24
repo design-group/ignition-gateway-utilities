@@ -61,8 +61,20 @@ def get_function_qualified_path(func):
 	
 	Example output: General.Files.get_function_qualified_path
 	"""
-	
 	mqpath = func.func_code.co_filename.split(':', 1)[1].rsplit('>', 1)[0]
 	if hasattr(func, 'im_self'):
 		mqpath += '.' + func.im_self.__name__
 	return '.'.join((mqpath, func.__name__))
+
+def is_valid_variable_name(name):
+    """
+    DESCRIPTION: Checks to see if a variable name is valid
+    PARAMETERS: name (REQ, str) - The name of the variable
+    """
+	from ast import parse
+	
+	try:
+	    parse('%s = None' % (name))
+	    return True
+	except (SyntaxError, ValueError, TypeError):
+	    return False
