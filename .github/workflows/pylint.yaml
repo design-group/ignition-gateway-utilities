@@ -17,6 +17,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
+    - name: Run pylint and ensure a perfect score
       run: |
-        find . -name '*.py' -exec pylint {} \; | grep -v "Your code has been rated at 10.00/10" && exit 1 || exit 0
+        for file in $(find -name '*.py')
+        do
+          pylint "$file" --fail-under=10.0;
+        done
