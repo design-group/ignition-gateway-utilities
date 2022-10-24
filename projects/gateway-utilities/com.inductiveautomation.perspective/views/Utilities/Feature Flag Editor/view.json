@@ -2,15 +2,30 @@
   "custom": {
     "features": [
       {
-        "category_id": "test",
+        "category_id": "developer-tools",
         "enabled": true,
-        "flag_id": "test"
+        "flag_id": "extra-logging"
+      },
+      {
+        "category_id": "developer-tools",
+        "enabled": false,
+        "flag_id": "view-params"
+      },
+      {
+        "category_id": "scripting",
+        "enabled": true,
+        "flag_id": "feature-b"
+      },
+      {
+        "category_id": "scripting",
+        "enabled": false,
+        "flag_id": "feature-a"
       }
     ],
     "newCategoryId": "",
     "newFlagId": "",
     "refresh": true,
-    "selectedFeature": {}
+    "selectedFeature": null
   },
   "params": {},
   "propConfig": {

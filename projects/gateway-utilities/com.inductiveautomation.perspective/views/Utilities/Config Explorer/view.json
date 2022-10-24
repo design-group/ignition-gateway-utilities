@@ -6,12 +6,30 @@
     "fileStructure": [
       {
         "data": {
-          "name": "Test",
+          "name": "ConfigA",
           "value": "{}"
         },
         "expanded": false,
         "items": [],
-        "label": "Test"
+        "label": "ConfigA"
+      },
+      {
+        "data": {
+          "name": "ConfigB",
+          "value": "{\n    \"report_server\": \"http://rptdev01.example.com/ibi_apps/WFServlet?\",\n    \"apps\": {\n        \"sap\": {\n            \"host\": \"sap.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        },\n        \"mulesoft\": {\n            \"host\": \"mulesoft.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        }\n    },\n    \"theme\": \"custom-dev\",\n    \"testing\": {\n        \"allow_invasive\": false,\n        \"browser\": \"chrome\",\n        \"credentials\": {\n            \"username\": \"TestAccount\",\n            \"password\": \"TestAccountPassword\"\n        },\n        \"default_test_env\": \"localhost\",\n        \"headless\": false,\n        \"remote\": {\n            \"command_executor\": \"http://localhost:4444/wd/hub\",\n            \"insecure\": true\n        }\n    }\n}"
+        },
+        "expanded": false,
+        "items": [],
+        "label": "ConfigB"
+      },
+      {
+        "data": {
+          "name": "ConfigC",
+          "value": "{}"
+        },
+        "expanded": false,
+        "items": [],
+        "label": "ConfigC"
       }
     ],
     "newConfigName": "",
@@ -123,8 +141,8 @@
   },
   "props": {
     "defaultSize": {
-      "height": 556,
-      "width": 793
+      "height": 561,
+      "width": 950
     }
   },
   "root": {

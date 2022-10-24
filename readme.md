@@ -17,3 +17,19 @@ Convenience functions for accessing config files on the gateway. This includes t
 Convenience functions for accessing feature flags on the gateway. This includes the ability to view, upload, download, and customize feature flags through a dedicated explorer.
 
 ![Feature Flag Viewer](./images/FeatureFlagEditor.png)
+
+#### Multithreading
+Convenience functions for running scripts in parallel. This includes the ability to run scripts in parallel with a set thread count. 
+
+This could be used if multiple heavy operations need to happen before a user can move on. Executing the same script multiple times in parallel could resolve in a faster user experience.
+
+##### Example
+```python
+General.Multithreading.wait_for_async_execution(
+        func=myFunction, 
+        kwargs_list=[
+                {"myArg":"val1"}, 
+                {"myArg":"val2"}
+                ]
+        )
+```
