@@ -29,7 +29,7 @@ class ExceptionThread(threading.Thread):
 		self.exception = None
 		try:
 			super(ExceptionThread, self).run()
-		except BaseException as exception:
+		except BaseException as exception: # pylint: disable=broad-except 
 			self.exception = exception
 
 
