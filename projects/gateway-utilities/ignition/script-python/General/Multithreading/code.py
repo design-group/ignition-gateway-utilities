@@ -41,10 +41,15 @@ class MultiThreadedException(Exception):
 
 	def __init__(self, exceptions):
 		self.exceptions = exceptions
-		super(MultiThreadedException, self).__init__("Multiple exceptions were raised")
+		if len(self.exceptions) > 1:
+			self.message = "Multiple exceptions were raised while multithreading"
+		else:
+			self.message = "An exception was raised while multithreading"
+		
+		super(MultiThreadedException, self).__init__(self.message)
 
 	def __str__(self):
-		return "Multiple exceptions were raised: %s" % self.exceptions
+		return "%s: %s" % (self.message, self.exceptions)
 
 def wait_for_async_execution(func, kwargs_list=None, max_threads=-1):
 	"""
@@ -61,7 +66,7 @@ def wait_for_async_execution(func, kwargs_list=None, max_threads=-1):
 	if kwargs_list is None:
 		kwargs_list = []
 	
-	# NOTE: If the number of threads is -1, we will use the number kwargs options ptovided
+	# NOTE: If the number of threads is -1, we will use the number kwargs options provided
 	if max_threads == -1:
 		max_threads = len(kwargs_list)
 
