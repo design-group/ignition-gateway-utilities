@@ -5,7 +5,8 @@ This module provides functions for general utilities.
 
 This module should not have any dependencies on any other Ignition modules.
 """
-
+import re
+import collections
 logger = system.util.getLogger("General.Utilities")
 
 class JsonPathException(Exception):
@@ -31,7 +32,8 @@ def execute_on_gateway(func):
 			project = system.util.getProjectName()
 			func_path = get_function_qualified_path(func)
 
-			return system.util.sendRequest(project, "executeInGatewayScope", {"func":func_path, 'args':args, 'kwargs':kwargs})
+			return system.util.sendRequest(project, "executeInGatewayScope", 
+												{"func":func_path, 'args':args, 'kwargs':kwargs})
 
 		return func(*args, **kwargs)
 	return wrapper
@@ -94,16 +96,17 @@ def is_valid_variable_name(name):
 	except (SyntaxError, ValueError, TypeError):
 		return False
 	
-def sort_list_by_alpha_numeric(theList, key='label'):
+def sort_list_by_alpha_numeric(the_list, key='label'):
 	"""
 	DESCRIPTION: Sorts a list alphabetically
-	PARAMETERS: theList (REQ, list): the list to be converted
+	PARAMETERS: the_list (REQ, list): the list to be converted
 	"""
-	logger.trace("General.Conversion.sort_list_by_alpha_numeric(theList=%s)" % (theList))
+	logger.trace("General.Conversion.sort_list_by_alpha_numeric(the_list=%s)" % (the_list))
 	try:
-		return sorted(theList, key=lambda val: (re.sub(r'\d+', "", val), int(re.sub(r'\D+', "", val) or 0)))
-	except:
-		return sorted(theList, key=lambda val: (re.sub(r'\d+', "", val.get(key)), int(re.sub(r'\D+', "", val.get(key)) or 0)))
+		return sorted(the_list, key=lambda val: (re.sub(r'\d+', "", val), int(re.sub(r'\D+', "", val) or 0)))
+	except TypeError:
+		return sorted(the_list, key=lambda val: (re.sub(r'\d+', "", val.get(key)), 
+						int(re.sub(r'\D+', "", val.get(key)) or 0)))
 
 def round_to_next_hour(datetime):
 	"""
@@ -132,19 +135,19 @@ def get_from_path(obj, path):
 		rv = rv[key]
 	return rv
 
-def combine_objects(base_dict, dict_to_merge, prependList=False):
+def combine_objects(base_dict, dict_to_merge, prepend_list=False):
 	""" 
 	DESCRIPTION: This method takes 2 objects and returns a combined object without overwriting any of the keys or values
 	PARAMETERS: dct (REQ, dictionary) -  dict onto which the merge is executed
 				merge_dct (REQ, dictionary) - dct merged into dct
-				prependList (OPT, boolean) - if true, the merge_dct is prepended to the base_dict
+				prepend_list (OPT, boolean) - if true, the merge_dct is prepended to the base_dict
 	"""
-	for k, v in dict_to_merge.items():
+	for k in dict_to_merge.keys():
 		if (k in base_dict and isinstance(base_dict[k], dict)
 				and isinstance(dict_to_merge[k], collections.Mapping)):
 			combine_objects(base_dict[k], dict_to_merge[k])
 		elif k in base_dict and isinstance(base_dict[k], list) and isinstance(dict_to_merge[k], list):
-			if prependList:
+			if prepend_list:
 				base_dict[k] = list(dict_to_merge[k]) + base_dict[k]
 			else:
 				base_dict[k].extend(dict_to_merge[k])
@@ -161,7 +164,8 @@ def get_millis_time():
 	
 def is_number(val):
 	"""
-	DESCRIPTION: Takes a string value and attempts to convert it to a float, if successful it wont error. If it errors, it likely isnt a valid number.
+	DESCRIPTION: Takes a string value and attempts to convert it to a float, if successful it wont error. 
+				 If it errors, it likely isnt a valid number.
 	PARAMETERS: val (REQ, obj) - A value which to compare to a float
 	"""
 	try:
