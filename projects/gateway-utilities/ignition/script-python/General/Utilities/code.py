@@ -6,7 +6,7 @@ This module provides functions for general utilities.
 This module should not have any dependencies on any other Ignition modules.
 """
 
-LOGGER = system.util.getLogger("General.Utilities")
+logger = system.util.getLogger("General.Utilities")
 
 class JsonPathException(Exception):
 	"""
@@ -92,4 +92,80 @@ def is_valid_variable_name(name):
 		parse('%s = None' % (name))
 		return True
 	except (SyntaxError, ValueError, TypeError):
+		return False
+	
+def sort_list_by_alpha_numeric(theList, key='label'):
+	"""
+	DESCRIPTION: Sorts a list alphabetically
+	PARAMETERS: theList (REQ, list): the list to be converted
+	"""
+	logger.trace("General.Conversion.sort_list_by_alpha_numeric(theList=%s)" % (theList))
+	try:
+		return sorted(theList, key=lambda val: (re.sub(r'\d+', "", val), int(re.sub(r'\D+', "", val) or 0)))
+	except:
+		return sorted(theList, key=lambda val: (re.sub(r'\d+', "", val.get(key)), int(re.sub(r'\D+', "", val.get(key)) or 0)))
+
+def round_to_next_hour(datetime):
+	"""
+	DESCRIPTION: Rounds value up to the nearest hour
+	PARAMETERS: datetime (REQ, datetime): The value to be rounded up
+	"""
+	year = system.date.getYear(datetime)
+	day_of_year = system.date.getDayOfYear(datetime)
+	hour_plus_one = system.date.getHour24(datetime) + 1
+	
+	# this ticks the date over if the hour is rounded to midnight
+	if hour_plus_one == 0 or hour_plus_one == 24:
+		day_of_year += 1
+	
+	return system.date.parse("%s-%s %s:00:00" % (year, day_of_year, hour_plus_one), "y-D k:m:s")
+
+def get_from_path(obj, path):
+	"""
+	DESCRIPTION: Splits path and adds each part of path to a return value associated with the object
+	PARAMETERS: object (REQ, object): The object the path will be associated to
+				path (REQ, string): The path to be seperated and then associated to the object
+	"""
+	keys = path.split('.')
+	rv = obj
+	for key in keys:
+		rv = rv[key]
+	return rv
+
+def combine_objects(base_dict, dict_to_merge, prependList=False):
+	""" 
+	DESCRIPTION: This method takes 2 objects and returns a combined object without overwriting any of the keys or values
+	PARAMETERS: dct (REQ, dictionary) -  dict onto which the merge is executed
+				merge_dct (REQ, dictionary) - dct merged into dct
+				prependList (OPT, boolean) - if true, the merge_dct is prepended to the base_dict
+	"""
+	for k, v in dict_to_merge.items():
+		if (k in base_dict and isinstance(base_dict[k], dict)
+				and isinstance(dict_to_merge[k], collections.Mapping)):
+			combine_objects(base_dict[k], dict_to_merge[k])
+		elif k in base_dict and isinstance(base_dict[k], list) and isinstance(dict_to_merge[k], list):
+			if prependList:
+				base_dict[k] = list(dict_to_merge[k]) + base_dict[k]
+			else:
+				base_dict[k].extend(dict_to_merge[k])
+		else:
+			base_dict[k] = dict_to_merge[k]
+	return base_dict
+
+def get_millis_time():
+	"""
+	DESCRIPTION: Returns the current time in milliseconds
+	"""
+	return system.date.toMillis(system.date.now())
+	
+	
+def is_number(val):
+	"""
+	DESCRIPTION: Takes a string value and attempts to convert it to a float, if successful it wont error. If it errors, it likely isnt a valid number.
+	PARAMETERS: val (REQ, obj) - A value which to compare to a float
+	"""
+	try:
+		float(val)
+		return True
+	except (ValueError, TypeError):
 		return False
