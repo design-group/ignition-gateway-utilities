@@ -7,14 +7,14 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
-logger = system.util.getLogger("General.Conversion")
+LOGGER = system.util.getLogger("General.Conversion")
 
 def convert_dataset_to_list(dataset):
 	"""
 	DESCRIPTION: This function converts a dataset to a list of dictionaries 
 	PARAMETERS: dataset (REQ, dataset): The dataset to be converted to a list of dictionaries
 	"""
-	logger.trace("General.Conversion.convert_dataset_to_list(dataset=%s)" % (dataset))
+	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
 	if isinstance(dataset, collections.iterable):
 		return dataset
 	
@@ -36,7 +36,7 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None)
 	PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
 				titalize_headers (OPT, bool): True in the case of the ability to get the names of the header in list_var
 	"""
-	logger.trace("General.Conversion.convert_list_to_dataset(list_var=%s)" % (list_var))
+	LOGGER.trace("convert_list_to_dataset(list_var=%s)" % (list_var))
 	if not isinstance(list_var, collections.iterable):
 		return list_var
 	if column_order is not None:
@@ -69,7 +69,7 @@ def convert_properties_to_dictionary(obj):
 	DESCRIPTION: Converts properties from the view into a dictionary, if possible
 	PARAMETERS: obj (REQ, object): The properties to be converted
 	"""
-	logger.trace("General.Conversion.convert_properties_to_dictionary(obj=%s)" % (obj))
+	LOGGER.trace("convert_properties_to_dictionary(obj=%s)" % (obj))
 
 	if obj is None:
 		return None
@@ -95,7 +95,7 @@ def convert_from_camel_case_to_caps(string):
 	DESCRIPTION: Converts a string from camel case to all caps
 	PARAMETERS: string (REQ, string): The string to be converted
 	"""
-	logger.trace("General.Conversion.convert_from_camel_case_to_caps(string=%s)" % (string))
+	LOGGER.trace("convert_from_camel_case_to_caps(string=%s)" % (string))
 	return re.sub("([a-z])([A-Z])", r"\g<1> \g<2>", string).capitalize()
 	
 def convert_list_to_dropdown(options):
@@ -103,7 +103,7 @@ def convert_list_to_dropdown(options):
 	DESCRIPTION: Creates a list of dictionaries for each object to allow for a dropdown option
 	PARAMETERS: options (REQ, list): The list of values possible for a drop down
 	"""
-	logger.trace("General.Conversion.convert_list_to_dropdown(options=%s)" % (options))
+	LOGGER.trace("convert_list_to_dropdown(options=%s)" % (options))
 	dropdown_options = []
 	for option in options:
 		if isinstance(option, basestring):
@@ -117,8 +117,8 @@ def convert_dict_to_dropdown(options):
 	DESCRIPTION: Creates a list of dictionaries for a dropdown from a dictionary
 	PARAMETERS: options (REQ, dict): The dictionary to be converted (key is the label, value is the value)
 	"""
-	logger.trace("General.Conversion.convert_dict_to_dropdown(options=%s)" % (options))
+	LOGGER.trace("convert_dict_to_dropdown(options=%s)" % (options))
 	dropdown_options = []
 	for key in options.keys():
-		dropdown_options.append({"label": options[key], "value": key})
+		dropdown_options = [{"label": val, "value": key} for key, val in options.iteritems()]
 	return sorted(dropdown_options, key=lambda opt: opt['value'])

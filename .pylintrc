@@ -199,7 +199,7 @@ function-rgx=^(?:(?P<exempt>setUp|tearDown|setUpModule|tearDownModule)|(?P<camel
 variable-rgx=^[a-z][a-z0-9_]*$
 
 # Regular expression matching correct constant names
-const-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$
+const-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__*)$
 
 # Regular expression matching correct attribute names
 attr-rgx=^_{0,2}[a-z][a-z0-9_]*$

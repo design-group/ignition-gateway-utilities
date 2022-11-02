@@ -7,7 +7,7 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
-logger = system.util.getLogger("General.Utilities")
+LOGGER = system.util.getLogger("General.Utilities")
 
 class JsonPathException(Exception):
 	"""
@@ -101,7 +101,7 @@ def sort_list_by_alpha_numeric(the_list, key='label'):
 	DESCRIPTION: Sorts a list alphabetically
 	PARAMETERS: the_list (REQ, list): the list to be converted
 	"""
-	logger.trace("General.Conversion.sort_list_by_alpha_numeric(the_list=%s)" % (the_list))
+	LOGGER.trace("sort_list_by_alpha_numeric(the_list=%s)" % (the_list))
 	try:
 		return sorted(the_list, key=lambda val: (re.sub(r'\d+', "", val), int(re.sub(r'\D+', "", val) or 0)))
 	except TypeError:
