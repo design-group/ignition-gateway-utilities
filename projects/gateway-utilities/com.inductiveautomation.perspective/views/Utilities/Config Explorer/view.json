@@ -1,40 +1,34 @@
 {
   "custom": {
     "configPath": "/usr/local/bin/ignition/data/configs",
-    "currentItemPath": "",
+    "currentItemPath": "test.files[0]",
     "expandAll": false,
     "fileStructure": [
       {
         "data": {
-          "name": "ConfigA",
+          "name": "test",
+          "value": "{\n  \"scope\": \"A\",\n  \"version\": 1,\n  \"restricted\": false,\n  \"overridable\": true,\n  \"files\": [\n    \"code.py\"\n  ],\n  \"attributes\": {\n    \"lastModification\": {\n      \"actor\": \"external\",\n      \"timestamp\": \"2022-11-21T22:09:48Z\"\n    },\n    \"lastModificationSignature\": \"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\n    \"hintScope\": 2\n  }\n}"
+        },
+        "expanded": false,
+        "items": [],
+        "label": "test"
+      },
+      {
+        "data": {
+          "name": "test2",
           "value": "{}"
         },
         "expanded": false,
         "items": [],
-        "label": "ConfigA"
-      },
-      {
-        "data": {
-          "name": "ConfigB",
-          "value": "{\n    \"report_server\": \"http://rptdev01.example.com/ibi_apps/WFServlet?\",\n    \"apps\": {\n        \"sap\": {\n            \"host\": \"sap.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        },\n        \"mulesoft\": {\n            \"host\": \"mulesoft.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        }\n    },\n    \"theme\": \"custom-dev\",\n    \"testing\": {\n        \"allow_invasive\": false,\n        \"browser\": \"chrome\",\n        \"credentials\": {\n            \"username\": \"TestAccount\",\n            \"password\": \"TestAccountPassword\"\n        },\n        \"default_test_env\": \"localhost\",\n        \"headless\": false,\n        \"remote\": {\n            \"command_executor\": \"http://localhost:4444/wd/hub\",\n            \"insecure\": true\n        }\n    }\n}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "ConfigB"
-      },
-      {
-        "data": {
-          "name": "ConfigC",
-          "value": "{}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "ConfigC"
+        "label": "test2"
       }
     ],
     "newConfigName": "",
     "refresh": false,
-    "selectedConfig": ""
+    "selectedConfig": {
+      "name": "test",
+      "value": "{\n  \"scope\": \"A\",\n  \"version\": 1,\n  \"restricted\": false,\n  \"overridable\": true,\n  \"files\": [\n    \"code.py\"\n  ],\n  \"attributes\": {\n    \"lastModification\": {\n      \"actor\": \"external\",\n      \"timestamp\": \"2022-11-21T22:09:48Z\"\n    },\n    \"lastModificationSignature\": \"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\n    \"hintScope\": 2\n  }\n}"
+    }
   },
   "params": {
     "folderPath": "configs",
@@ -892,6 +886,79 @@
                   }
                 },
                 "type": "ia.display.tree"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "300px"
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": ".../CurrentObject.custom.currentItemPath"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "TextField"
+                    },
+                    "position": {
+                      "basis": "314px",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": ".../CurrentObject.props.selectionData[0].value"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "type": "ia.input.text-field"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onClick": {
+                          "config": {
+                            "script": "\tGeneral.Config.set_config_value(\n\t\tconfig_name \u003d self.parent.parent.parent.getChild(\"Left\").getChild(\"ConfigSection\").getChild(\"FlexContainer\").getChild(\"FileTree\").props.selectionData[0].value.value, \n\t\tconfig_key \u003d self.parent.parent.getChild(\"CurrentObject\").custom.currentItemPath, \n\t\tconfig_value \u003d self.props.text\n\t)\n\t\t"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "80px"
+                    },
+                    "props": {
+                      "text": "Update"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "FlexContainer"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "type": "ia.container.flex"
               }
             ],
             "meta": {

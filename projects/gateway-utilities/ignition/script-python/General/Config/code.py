@@ -47,6 +47,6 @@ def set_config_value(config_name, config_key, config_value):
 
 	config = General.Files.get_gateway_file_contents(file_path)
 
-	General.Utilities.write_json_path(config, config_key, config_value)
+	new_config = General.Utilities.write_json_path(config, config_key, config_value)
 
-	General.Files.set_gateway_file_contents(file_path, config)
+	General.Files.set_gateway_file_contents(file_path, new_config)
