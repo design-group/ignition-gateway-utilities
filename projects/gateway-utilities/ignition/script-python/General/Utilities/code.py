@@ -70,6 +70,38 @@ def read_json_path(json_object, json_path):
 		raise JsonPathException("Failed to read json path for object %s element %s : %s -  EXCEPTION:%s" %
 																			(json_path, current_path, value, exception))
 
+def write_json_path(json_object, json_path, value):
+	"""
+	DESCRIPTION: Follows a JSON path to write the specified element. Will also handle a path relating to a list.
+					Will then set the value based on the path.
+	PARAMETERS: path (REQ, str) - a path to the needed value. Can contain . and [].
+	RETURNS: The modified json object
+	"""
+	json_path = json_path.split(".")
+	current_path = json_path[0]
+
+	new_value = json_object
+	try:
+		for item in json_path:
+			current_path += ".%s" % item
+			if "[" in item:
+				# NOTE: Get the number at the end of the path and use it to get the element
+				index = int((item[item.find("[")+1]))
+				item = item[:item.find("[")]
+
+				# NOTE: Add the most recent index item into the array path
+				current_path += "[%s]" % index
+
+				new_value[item][index] = value
+			else:
+				new_value[item] = value
+
+		return new_value
+	except Exception as exception:
+			# NOTE: We may be compiling something that we know isnt present sometimes, lets make this null if it isnt
+		raise JsonPathException("Failed to read json path for object %s element %s : %s -  EXCEPTION:%s" %
+																			(json_path, current_path, value, exception))
+
 
 def get_function_qualified_path(func):
 	"""
