@@ -1,34 +1,15 @@
 {
   "custom": {
     "configPath": "/usr/local/bin/ignition/data/configs",
-    "currentItemPath": "test.files[0]",
-    "expandAll": false,
-    "fileStructure": [
-      {
-        "data": {
-          "name": "test",
-          "value": "{\n  \"scope\": \"A\",\n  \"version\": 1,\n  \"restricted\": false,\n  \"overridable\": true,\n  \"files\": [\n    \"code.py\"\n  ],\n  \"attributes\": {\n    \"lastModification\": {\n      \"actor\": \"external\",\n      \"timestamp\": \"2022-11-21T22:09:48Z\"\n    },\n    \"lastModificationSignature\": \"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\n    \"hintScope\": 2\n  }\n}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "test"
-      },
-      {
-        "data": {
-          "name": "test2",
-          "value": "{}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "test2"
-      }
-    ],
+    "currentItemPath": "test.version",
+    "currentItemValue": "new version",
     "newConfigName": "",
     "refresh": false,
     "selectedConfig": {
       "name": "test",
-      "value": "{\n  \"scope\": \"A\",\n  \"version\": 1,\n  \"restricted\": false,\n  \"overridable\": true,\n  \"files\": [\n    \"code.py\"\n  ],\n  \"attributes\": {\n    \"lastModification\": {\n      \"actor\": \"external\",\n      \"timestamp\": \"2022-11-21T22:09:48Z\"\n    },\n    \"lastModificationSignature\": \"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\n    \"hintScope\": 2\n  }\n}"
-    }
+      "value": "{\"test\":\"Update\",\"restricted\":false,\"scope\":\"A\",\"overridable\":true,\"files\":[\"code.py\"],\"attributes\":{\"hintScope\":2,\"lastModificationSignature\":\"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\"lastModification\":{\"actor\":\"external\",\"timestamp\":\"2022-11-21T22:09:48Z\"}},\"version\":\"Update\"}"
+    },
+    "selectedValue": "value"
   },
   "params": {
     "folderPath": "configs",
@@ -59,6 +40,15 @@
       },
       "persistent": true
     },
+    "custom.currentItemValue": {
+      "binding": {
+        "config": {
+          "expression": "\u0027\u0027"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
     "custom.expandAll": {
       "binding": {
         "config": {
@@ -66,7 +56,7 @@
         },
         "type": "expr"
       },
-      "persistent": true
+      "persistent": false
     },
     "custom.fileStructure": {
       "binding": {
@@ -85,7 +75,7 @@
         ],
         "type": "expr-struct"
       },
-      "persistent": true
+      "persistent": false
     },
     "custom.newConfigName": {
       "binding": {
@@ -122,6 +112,9 @@
         ],
         "type": "expr-struct"
       },
+      "persistent": true
+    },
+    "custom.selectedValue": {
       "persistent": true
     },
     "params.folderPath": {
@@ -822,6 +815,20 @@
                       "type": "expr-struct"
                     }
                   },
+                  "custom.currentItemValue": {
+                    "binding": {
+                      "config": {
+                        "path": "this.props.selectionData[0].value"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tself.view.custom.currentItemValue \u003d value\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
                   "props.items": {
                     "binding": {
                       "config": {
@@ -900,7 +907,7 @@
                       "props.text": {
                         "binding": {
                           "config": {
-                            "path": ".../CurrentObject.custom.currentItemPath"
+                            "path": "view.custom.currentItemPath"
                           },
                           "type": "property"
                         }
@@ -920,7 +927,8 @@
                       "props.text": {
                         "binding": {
                           "config": {
-                            "path": ".../CurrentObject.props.selectionData[0].value"
+                            "bidirectional": true,
+                            "path": "view.custom.currentItemValue"
                           },
                           "type": "property"
                         }
@@ -933,7 +941,7 @@
                       "dom": {
                         "onClick": {
                           "config": {
-                            "script": "\tGeneral.Config.set_config_value(\n\t\tconfig_name \u003d self.parent.parent.parent.getChild(\"Left\").getChild(\"ConfigSection\").getChild(\"FlexContainer\").getChild(\"FileTree\").props.selectionData[0].value.value, \n\t\tconfig_key \u003d self.parent.parent.getChild(\"CurrentObject\").custom.currentItemPath, \n\t\tconfig_value \u003d self.props.text\n\t)\n\t\t"
+                            "script": "\tname \u003d self.view.custom.selectedConfig.name\n\tkey \u003d self.view.custom.currentItemPath\n\t#note: bidirectional binding on text field text prop\n\tvalue \u003d self.view.custom.currentItemValue\n\tGeneral.Config.set_config_value(\n\t\tconfig_name \u003d name, \n\t\tconfig_key \u003d key, \n\t\tconfig_value \u003d value\n\t)\n\t\t"
                           },
                           "scope": "G",
                           "type": "script"

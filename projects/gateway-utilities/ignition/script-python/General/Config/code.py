@@ -46,7 +46,10 @@ def set_config_value(config_name, config_key, config_value):
 	file_path = '%s/%s.json' % (CONFIG_SOURCE_DIRECTORY, config_name)
 
 	config = General.Files.get_gateway_file_contents(file_path)
+	
+	system.perspective.print(config)
 
 	new_config = General.Utilities.write_json_path(config, config_key, config_value)
 
-	General.Files.set_gateway_file_contents(file_path, new_config)
+	system.perspective.print(new_config)
+	#General.Files.set_gateway_file_contents(file_path, new_config)

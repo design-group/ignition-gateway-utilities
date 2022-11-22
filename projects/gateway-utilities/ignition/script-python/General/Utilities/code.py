@@ -78,12 +78,22 @@ def write_json_path(json_object, json_path, value):
 	RETURNS: The modified json object
 	"""
 	json_path = json_path.split(".")
+	
+	system.perspective.print(json_path)
+	
 	current_path = json_path[0]
-
-	new_value = json_object
+	system.perspective.print(current_path)
+	
+	new_json_object = json_object
+	
+	system.perspective.print(new_json_object)
+	
 	try:
 		for item in json_path:
 			current_path += ".%s" % item
+			
+			system.perspective.print(item)
+			
 			if "[" in item:
 				# NOTE: Get the number at the end of the path and use it to get the element
 				index = int((item[item.find("[")+1]))
@@ -92,11 +102,11 @@ def write_json_path(json_object, json_path, value):
 				# NOTE: Add the most recent index item into the array path
 				current_path += "[%s]" % index
 
-				new_value[item][index] = value
+				new_json_object[item][index] = value
 			else:
-				new_value[item] = value
+				new_json_object[item] = value
 
-		return new_value
+		return new_json_object
 	except Exception as exception:
 			# NOTE: We may be compiling something that we know isnt present sometimes, lets make this null if it isnt
 		raise JsonPathException("Failed to read json path for object %s element %s : %s -  EXCEPTION:%s" %

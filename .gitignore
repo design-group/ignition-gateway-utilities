@@ -1,5 +1,9 @@
 # Ignore the builtin vscode files
 *.vscode
+*.code-workspace
+
+# Ignore MacOS files
+.DS_Store
 
 # Ignore the theming digest files in your repo
 *.digest.json
@@ -31,3 +35,6 @@ modules/com.inductiveautomation.perspective/themes/dark-cool
 modules/com.inductiveautomation.perspective/themes/light-cool.css
 modules/com.inductiveautomation.perspective/themes/light-cool
 modules/com.inductiveautomation.perspective/themes/README.md
+
+# Gateway specific files
+configs
