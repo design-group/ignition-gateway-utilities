@@ -7,7 +7,8 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
-LOGGER = system.util.getLogger("General.Utilities")
+#LOGGER = system.util.getLogger("General.Utilities")
+logger = General.Logging.Logger("General.Utilities")
 
 class JsonPathException(Exception):
 	"""
@@ -77,23 +78,25 @@ def write_json_path(json_object, json_path, value):
 	PARAMETERS: path (REQ, str) - a path to the needed value. Can contain . and [].
 	RETURNS: The modified json object
 	"""
+	logger.info("json_path: %s" % json_path)	
+	logger.info("json_object: %s" % json_object)	
+	logger.info("value: %s" % value)	
+
 	json_path = json_path.split(".")
-	
-	system.perspective.print(json_path)
-	
+	json_path.pop(0)
 	current_path = json_path[0]
-	system.perspective.print(current_path)
-	
+
+	logger.info("current_path: %s" % current_path)	
+
 	new_json_object = json_object
-	
-	system.perspective.print(new_json_object)
-	
+	logger.info("new_json_object: %s" % new_json_object)	
+		
 	try:
 		for item in json_path:
 			current_path += ".%s" % item
 			
-			system.perspective.print(item)
-			
+			logger.info("item: %s" % item)	
+				
 			if "[" in item:
 				# NOTE: Get the number at the end of the path and use it to get the element
 				index = int((item[item.find("[")+1]))
@@ -106,6 +109,8 @@ def write_json_path(json_object, json_path, value):
 			else:
 				new_json_object[item] = value
 
+		logger.info("new_json_object: %s" % new_json_object)	
+	
 		return new_json_object
 	except Exception as exception:
 			# NOTE: We may be compiling something that we know isnt present sometimes, lets make this null if it isnt

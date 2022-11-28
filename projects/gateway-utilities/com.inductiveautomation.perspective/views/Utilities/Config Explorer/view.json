@@ -1,13 +1,13 @@
 {
   "custom": {
     "configPath": "/usr/local/bin/ignition/data/configs",
-    "currentItemPath": "test.version",
-    "currentItemValue": "new version",
+    "currentItemPath": "test.attributes.hintScope",
+    "currentItemValue": "6",
     "newConfigName": "",
     "refresh": false,
     "selectedConfig": {
       "name": "test",
-      "value": "{\"test\":\"Update\",\"restricted\":false,\"scope\":\"A\",\"overridable\":true,\"files\":[\"code.py\"],\"attributes\":{\"hintScope\":2,\"lastModificationSignature\":\"dcd4b6ba143a8e5b7d1c06b3ca091941a4dc47c2a1a1acea212bbb8cd51a407f\",\"lastModification\":{\"actor\":\"external\",\"timestamp\":\"2022-11-21T22:09:48Z\"}},\"version\":\"Update\"}"
+      "value": "{\"restricted\":false,\"scope\":\"A\",\"overridable\":true,\"files\":[\"code.py\"],\"attributes\":{\"hintScope\":2,\"lastModificationSignature\":\"66028af320e8a7021350d8170bf84a9e5bb126c1782ac3d0dcdd36fa10ee2e96\",\"lastModification\":{\"actor\":\"admin\",\"timestamp\":\"2022-11-23T20:52:53Z\"}},\"version\":\"4\"}"
     },
     "selectedValue": "value"
   },
