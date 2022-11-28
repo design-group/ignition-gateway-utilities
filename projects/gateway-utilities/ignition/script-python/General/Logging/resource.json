@@ -10,10 +10,10 @@
   ],
   "attributes": {
     "lastModification": {
-      "actor": "admin",
-      "timestamp": "2022-11-23T21:12:10Z"
+      "actor": "external",
+      "timestamp": "2022-11-28T19:14:22Z"
     },
-    "lastModificationSignature": "08052a9ce386e24ecd5874ec0d127842167584aec7308e0d73a0d8d22dbd5e0f",
+    "lastModificationSignature": "3453ce2a51b59a4571c6464a5ebc6fc2c520c197e380b69505860f6e072edf22",
     "hintScope": 2
   }
 }
