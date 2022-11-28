@@ -3,6 +3,18 @@ General.Perspective.Table
 
 This script contains functions used with table components.
 """
+import General.Conversion
+
+def export_table_to_xlsx(table):
+	"""
+	DESCRIPTION: Exports the table to an xlsx file
+	PARAMETERS:
+		table: Table object being exported
+	RETURNS: 
+	"""
+	table_dataset = get_dataset(table)
+	excel_data = system.dataset.toExcel(showHeaders=True, dataset=table_dataset)
+	system.perspective.download("data.xlsx", excel_data)
 
 def export_table_to_csv(table):
 	"""
@@ -12,8 +24,8 @@ def export_table_to_csv(table):
 	RETURNS: 
 	"""
 	table_dataset = get_dataset(table)
-	excel_data = system.dataset.toExcel(showHeaders=True, dataset=table_dataset)
-	system.perspective.download("data.xlsx", excel_data)
+	csv_data = system.dataset.toCSV(showHeaders=True, dataset=table_dataset)
+	system.perspective.download("data.csv", csv_data)
 
 def get_dataset(table):
 	"""
@@ -40,7 +52,7 @@ def get_dataset(table):
 
 	return General.Conversion.convert_list_to_dataset(list_var=table_data, headers_list=headers)
 
-def set_column_attributes(field, title, datatype):
+def get_column_template(field, title, datatype):
 	"""
 	DESCRIPTION: Sets the attributes of the columns
 	PARAMETERS:
