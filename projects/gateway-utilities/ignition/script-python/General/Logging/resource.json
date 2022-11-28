@@ -1,0 +1,19 @@
+{
+  "scope": "A",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "code.py",
+    "readme.md",
+    "__init__.py"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2022-11-23T21:12:10Z"
+    },
+    "lastModificationSignature": "08052a9ce386e24ecd5874ec0d127842167584aec7308e0d73a0d8d22dbd5e0f",
+    "hintScope": 2
+  }
+}
