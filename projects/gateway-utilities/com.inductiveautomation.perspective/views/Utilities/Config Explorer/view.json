@@ -1,40 +1,15 @@
 {
   "custom": {
     "configPath": "/usr/local/bin/ignition/data/configs",
-    "currentItemPath": "",
-    "expandAll": false,
-    "fileStructure": [
-      {
-        "data": {
-          "name": "ConfigA",
-          "value": "{}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "ConfigA"
-      },
-      {
-        "data": {
-          "name": "ConfigB",
-          "value": "{\n    \"report_server\": \"http://rptdev01.example.com/ibi_apps/WFServlet?\",\n    \"apps\": {\n        \"sap\": {\n            \"host\": \"sap.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        },\n        \"mulesoft\": {\n            \"host\": \"mulesoft.dev.example.com\",\n            \"port\": 8080,\n            \"client_id\": \"1234567890\",\n            \"client_secret\": \"1234567890\"\n        }\n    },\n    \"theme\": \"custom-dev\",\n    \"testing\": {\n        \"allow_invasive\": false,\n        \"browser\": \"chrome\",\n        \"credentials\": {\n            \"username\": \"TestAccount\",\n            \"password\": \"TestAccountPassword\"\n        },\n        \"default_test_env\": \"localhost\",\n        \"headless\": false,\n        \"remote\": {\n            \"command_executor\": \"http://localhost:4444/wd/hub\",\n            \"insecure\": true\n        }\n    }\n}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "ConfigB"
-      },
-      {
-        "data": {
-          "name": "ConfigC",
-          "value": "{}"
-        },
-        "expanded": false,
-        "items": [],
-        "label": "ConfigC"
-      }
-    ],
+    "currentItemPath": "test.attributes.hintScope",
+    "currentItemValue": "6",
     "newConfigName": "",
     "refresh": false,
-    "selectedConfig": ""
+    "selectedConfig": {
+      "name": "test",
+      "value": "{\"restricted\":false,\"scope\":\"A\",\"overridable\":true,\"files\":[\"code.py\"],\"attributes\":{\"hintScope\":2,\"lastModificationSignature\":\"66028af320e8a7021350d8170bf84a9e5bb126c1782ac3d0dcdd36fa10ee2e96\",\"lastModification\":{\"actor\":\"admin\",\"timestamp\":\"2022-11-23T20:52:53Z\"}},\"version\":\"4\"}"
+    },
+    "selectedValue": "value"
   },
   "params": {
     "folderPath": "configs",
@@ -65,6 +40,15 @@
       },
       "persistent": true
     },
+    "custom.currentItemValue": {
+      "binding": {
+        "config": {
+          "expression": "\u0027\u0027"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
     "custom.expandAll": {
       "binding": {
         "config": {
@@ -72,7 +56,7 @@
         },
         "type": "expr"
       },
-      "persistent": true
+      "persistent": false
     },
     "custom.fileStructure": {
       "binding": {
@@ -91,7 +75,7 @@
         ],
         "type": "expr-struct"
       },
-      "persistent": true
+      "persistent": false
     },
     "custom.newConfigName": {
       "binding": {
@@ -128,6 +112,9 @@
         ],
         "type": "expr-struct"
       },
+      "persistent": true
+    },
+    "custom.selectedValue": {
       "persistent": true
     },
     "params.folderPath": {
@@ -828,6 +815,20 @@
                       "type": "expr-struct"
                     }
                   },
+                  "custom.currentItemValue": {
+                    "binding": {
+                      "config": {
+                        "path": "this.props.selectionData[0].value"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tself.view.custom.currentItemValue \u003d value\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
                   "props.items": {
                     "binding": {
                       "config": {
@@ -892,6 +893,80 @@
                   }
                 },
                 "type": "ia.display.tree"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "300px"
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.currentItemPath"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "TextField"
+                    },
+                    "position": {
+                      "basis": "314px",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "bidirectional": true,
+                            "path": "view.custom.currentItemValue"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "type": "ia.input.text-field"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onClick": {
+                          "config": {
+                            "script": "\tname \u003d self.view.custom.selectedConfig.name\n\tkey \u003d self.view.custom.currentItemPath\n\t#note: bidirectional binding on text field text prop\n\tvalue \u003d self.view.custom.currentItemValue\n\tGeneral.Config.set_config_value(\n\t\tconfig_name \u003d name, \n\t\tconfig_key \u003d key, \n\t\tconfig_value \u003d value\n\t)\n\t\t"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "80px"
+                    },
+                    "props": {
+                      "text": "Update"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "FlexContainer"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "type": "ia.container.flex"
               }
             ],
             "meta": {
