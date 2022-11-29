@@ -15,7 +15,7 @@ def convert_dataset_to_list(dataset):
 	PARAMETERS: dataset (REQ, dataset): The dataset to be converted to a list of dictionaries
 	"""
 	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
-	if isinstance(dataset, collections.iterable):
+	if isinstance(dataset, collections.Iterable):
 		return dataset
 	
 	column_names = dataset.getColumnNames()
@@ -30,16 +30,19 @@ def convert_dataset_to_list(dataset):
 	return data
 	
 
-def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None):
+def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None, headers_list=None):
 	"""
 	DESCRIPTION: This function converts list of dictionaries to a dataset
 	PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
 				titalize_headers (OPT, bool): True in the case of the ability to get the names of the header in list_var
 	"""
 	LOGGER.trace("convert_list_to_dataset(list_var=%s)" % (list_var))
-	if not isinstance(list_var, collections.iterable):
+	if not isinstance(list_var, collections.Iterable):
 		return list_var
-	if column_order is not None:
+
+	if headers_list is not None:
+		headers = column_names = headers_list
+	elif column_order is not None:
 		headers = column_names = column_order
 	else:
 		headers = column_names = list_var[0].keys()
@@ -60,7 +63,6 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None)
 				value = str(row[column]) if row[column] is not None else None
 			row_data.append(value)
 		data.append(row_data)
-	
 	return system.dataset.toDataSet(headers, data)
 	
 
