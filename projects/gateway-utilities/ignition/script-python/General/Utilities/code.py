@@ -22,7 +22,7 @@ def execute_on_gateway(func):
 	#  we want to make sure that we are aware if this is executed in gateway scope or not
 	from com.inductiveautomation.ignition.common.model import ApplicationScope
 	scope = ApplicationScope.getGlobalScope()
-	is_gateway = ApplicationScope.isGateway(scope)
+	is_gateway = ApplicationScope.isGateway(scope) # pylint: disable=assignment-from-no-return
 
 	def wrapper(*args, **kwargs):
 		"""
