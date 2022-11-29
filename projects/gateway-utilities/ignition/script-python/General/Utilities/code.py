@@ -78,25 +78,28 @@ def write_json_path(json_object, json_path, value):
 	PARAMETERS: path (REQ, str) - a path to the needed value. Can contain . and [].
 	RETURNS: The modified json object
 	"""
-	logger.info("json_path: %s" % json_path)	
-	logger.info("json_object: %s" % json_object)	
-	logger.info("value: %s" % value)	
+	path = path.split(".")
+	# NOTE: Set the reference to the current position in the object
+	current_json_obj = json_object
+	new_json_obj = json_object
 
-	json_path = json_path.split(".")
-	json_path.pop(0)
-	current_path = json_path[0]
-
-	logger.info("current_path: %s" % current_path)	
-
-	new_json_object = json_object
-	logger.info("new_json_object: %s" % new_json_object)	
-		
 	try:
-		for item in json_path:
-			current_path += ".%s" % item
+		# NOTE: Iterate through each of the path items
+		for item in path:
+			# NOTE: If we have not hit the bottom of the path, keep going
+			if item != path[-1]:
+				if "[" in item:
+					# NOTE: Get the number at the end of the path and use it to get the element
+					index = int((item[item.find("[")+1]))
+					item = item[:item.find("[")]
+					current_json_obj = current_json_obj[item][index]
+				else:
+					current_json_obj = current_json_obj[item]
+
+				continue
 			
-			logger.info("item: %s" % item)	
-				
+			# If we are at the last item
+			# NOTE: Look for the array selector in the current path, if it exists, we need to set the value in the array
 			if "[" in item:
 				# NOTE: Get the number at the end of the path and use it to get the element
 				index = int((item[item.find("[")+1]))
@@ -105,13 +108,11 @@ def write_json_path(json_object, json_path, value):
 				# NOTE: Add the most recent index item into the array path
 				current_path += "[%s]" % index
 
-				new_json_object[item][index] = value
+				current_json_obj[item][index] = value
 			else:
-				new_json_object[item] = value
+				current_json_obj[item] = value
 
-		logger.info("new_json_object: %s" % new_json_object)	
-	
-		return new_json_object
+		return new_json_obj
 	except Exception as exception:
 			# NOTE: We may be compiling something that we know isnt present sometimes, lets make this null if it isnt
 		raise JsonPathException("Failed to read json path for object %s element %s : %s -  EXCEPTION:%s" %
