@@ -1,5 +1,6 @@
 # Ignore the builtin vscode files
 *.vscode
+*.code-workspace
 
 # Ignore MacOS files
 .DS_Store
