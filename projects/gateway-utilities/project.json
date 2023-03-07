@@ -1,0 +1,7 @@
+{
+  "title": "Gateway Utilities",
+  "description": "A Collection of Gateway Utility Scripts and functions to streamline development and integration",
+  "parent": "",
+  "enabled": true,
+  "inheritable": true
+}

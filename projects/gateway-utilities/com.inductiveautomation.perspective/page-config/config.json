@@ -1,0 +1,11 @@
+{
+  "pages": {
+    "/": {
+      "title": "Config Explorer",
+      "viewPath": "Utilities/Config Explorer"
+    }
+  },
+  "sharedDocks": {
+    "cornerPriority": "top-bottom"
+  }
+}

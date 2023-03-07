@@ -1,0 +1,687 @@
+{
+  "custom": {
+    "features": [
+      {
+        "category_id": "developer-tools",
+        "enabled": true,
+        "flag_id": "extra-logging"
+      },
+      {
+        "category_id": "developer-tools",
+        "enabled": false,
+        "flag_id": "view-params"
+      },
+      {
+        "category_id": "scripting",
+        "enabled": true,
+        "flag_id": "feature-b"
+      },
+      {
+        "category_id": "scripting",
+        "enabled": false,
+        "flag_id": "feature-a"
+      }
+    ],
+    "newCategoryId": "",
+    "newFlagId": "",
+    "refresh": true,
+    "selectedFeature": null
+  },
+  "params": {},
+  "propConfig": {
+    "custom.features": {
+      "binding": {
+        "config": {
+          "struct": {
+            "polling": "now(10000)",
+            "refresh": "{view.custom.refresh}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\treturn General.FeatureFlags.get_feature_flag_table()",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.newCategoryId": {
+      "binding": {
+        "config": {
+          "expression": "\u0027\u0027"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.newFlagId": {
+      "binding": {
+        "config": {
+          "expression": "\u0027\u0027"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.refresh": {
+      "persistent": true
+    },
+    "custom.selectedFeature": {
+      "binding": {
+        "config": {
+          "expression": "None"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 592,
+      "width": 675
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tsystem.perspective.sendMessage(\"addFeatureFlag\", {}, \"view\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Add"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "color": "--callToAction",
+                  "path": "material/add",
+                  "style": {}
+                }
+              },
+              "style": {
+                "backgroundColor": "transparent",
+                "borderStyle": "hidden"
+              },
+              "text": ""
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tcategory_id \u003d self.view.custom.selectedFeature.category_id\n\tflag_id \u003d self.view.custom.selectedFeature.flag_id\n\t\n\tGeneral.FeatureFlags.delete_feature_flag(category_id, flag_id)\n\tself.props.value \u003d 0\n\tself.view.custom.selectedFeature \u003d {}\n\tself.view.custom.refresh \u003d not self.view.custom.refresh"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Delete"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.confirm.enabled": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.enabled"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "coalesce({view.custom.selectedFeature.category_id}, \u0027\u0027) !\u003d \u0027\u0027"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.readyState.icon.color": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.enabled"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": "--callToAction--disabled",
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": true,
+                          "output": "--warning"
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "confirm": {
+                "text": "Are you sure? This is permanent."
+              },
+              "readyState": {
+                "icon": {
+                  "path": "material/delete",
+                  "style": {
+                    "height": "24px",
+                    "width": "2rem"
+                  }
+                },
+                "style": {
+                  "backgroundColor": "transparent",
+                  "borderStyle": "hidden"
+                },
+                "text": ""
+              },
+              "writingState": {
+                "icon": {
+                  "path": "material/hourglass_empty",
+                  "style": {
+                    "height": "24px",
+                    "width": "2rem"
+                  }
+                },
+                "text": ""
+              }
+            },
+            "type": "ia.input.oneshotbutton"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "NewCategory"
+                },
+                "position": {
+                  "basis": "150px"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.newCategoryId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "placeholder": "Category Id...",
+                  "style": {
+                    "marginRight": "10px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "meta": {
+                  "name": "NewFlag"
+                },
+                "position": {
+                  "basis": "150px"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.newFlagId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "placeholder": "Flag Id...",
+                  "style": {
+                    "marginRight": "10px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\t\n\tcategory_id \u003d self.view.custom.newCategoryId\n\tflag_id \u003d self.view.custom.newFlagId\n\n\t# If either of the entries are blank, just move on.\n\tif (category_id or \u0027\u0027) \u003d\u003d \u0027\u0027 or (flag_id or \u0027\u0027) \u003d\u003d \u0027\u0027:\n\t\treturn\n\t\n\tself.view.custom.newCategoryId \u003d \u0027\u0027\n\tself.view.custom.newFlagId \u003d \u0027\u0027\n\t\n\tGeneral.FeatureFlags.set_feature_flag(category_id, flag_id, False)\n\t\n\tsystem.perspective.sendMessage(\"addFeatureFlag\", {}, \"view\")\n\tself.view.custom.refresh \u003d not self.view.custom.refresh\n\t"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Save"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "props": {
+                  "color": "--callToAction",
+                  "path": "material/save",
+                  "style": {
+                    "cursor": "pointer",
+                    "padding": "3px"
+                  }
+                },
+                "type": "ia.display.icon"
+              }
+            ],
+            "meta": {
+              "name": "AddFeatureFlag"
+            },
+            "position": {
+              "basis": "30px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "expression": "false"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "justify": "center"
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "addFeatureFlag",
+                  "pageScope": false,
+                  "script": "\tself.meta.visible \u003d not self.meta.visible",
+                  "sessionScope": false,
+                  "viewScope": true
+                }
+              ]
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tfeature_flags \u003d General.FeatureFlags.get_feature_flags()\n\tfile_data \u003d system.util.jsonEncode(feature_flags)\n\t\n\tsystem.perspective.download(\"feature-flags.json\", file_data)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "FileDownload",
+              "tooltip": {
+                "enabled": true,
+                "text": "Download Config File"
+              }
+            },
+            "position": {
+              "basis": "100px",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "path": "material/cloud_download"
+                }
+              },
+              "text": ""
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onFileReceived": {
+                  "config": {
+                    "script": "\tfilePath \u003d General.FeatureFlags.FEATURE_FLAG_CONFIG_PATH\n\t\n\tjsonObj \u003d system.util.jsonDecode(event.file.getString())\n\t\n\tif jsonObj is not None:\n\t\tevent.file.copyTo(filePath)\n\t\n\t\tself.view.custom.refresh \u003d not self.view.custom.refresh"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "FileUpload",
+              "tooltip": {
+                "enabled": true,
+                "text": "Upload Config File"
+              }
+            },
+            "position": {
+              "basis": "100px",
+              "shrink": 0
+            },
+            "type": "ia.input.fileupload"
+          }
+        ],
+        "meta": {
+          "name": "Actions"
+        },
+        "position": {
+          "basis": "35px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "paddingLeft": "10px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onEditCellCommit": {
+              "config": {
+                "script": "\ttable_data \u003d self.props.data\n\t\n\tcategory_id \u003d table_data[event.row][\u0027category_id\u0027]\n\tflag_id \u003d table_data[event.row][\u0027flag_id\u0027]\n\tenabled \u003d event.value\n\t\n\tif event.column \u003d\u003d \"enabled\":\n\t\tGeneral.FeatureFlags.set_feature_flag(category_id, flag_id, enabled)\n\t\t\n\tself.view.refreshBinding(\"custom.features\")"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onRowClick": {
+              "config": {
+                "script": "\tself.view.custom.selectedFeature \u003d event.value"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "400px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.features"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.data": {
+            "binding": {
+              "config": {
+                "expression": "runScript(\"[]\")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click"
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "category_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Category"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "flag_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Flag"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "toggle",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": true,
+              "field": "enabled",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Enabled"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "boolean",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "emptyMessage": {
+            "noData": {
+              "text": "No Feature Flags Found"
+            },
+            "noFilterResults": {
+              "text": "No Feature Flags Match Filter"
+            }
+          },
+          "filter": {
+            "enabled": true
+          },
+          "selection": {}
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}
