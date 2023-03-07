@@ -4,7 +4,6 @@
   "restricted": false,
   "overridable": true,
   "files": [
-<<<<<<< HEAD
     "thumbnail.png",
     "view.json"
   ],
@@ -14,16 +13,5 @@
       "timestamp": "2022-10-24T02:16:03Z"
     },
     "lastModificationSignature": "5877636f255b6925ac5a52d1a0b2c5814ba1d2c9e80a7f918cdd1a8d0db5f829"
-=======
-    "view.json",
-    "thumbnail.png"
-  ],
-  "attributes": {
-    "lastModification": {
-      "actor": "external",
-      "timestamp": "2022-11-22T22:23:33Z"
-    },
-    "lastModificationSignature": "45ed414a6ca20d76965815e3f1feb265f6e82eff5e8c9815486a0ca54330a960"
->>>>>>> origin/master
   }
 }

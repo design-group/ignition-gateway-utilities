@@ -17,24 +17,19 @@ def convert_dataset_to_list(dataset):
 	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
 	if isinstance(dataset, collections.Iterable):
 		return dataset
-	
+
 	column_names = dataset.getColumnNames()
 
 	data = []
-	
+
 	for row in range(dataset.getRowCount()):
 		row_data = {}
 		for column in range(dataset.getColumnCount()):
 			row_data[column_names[column]] = dataset.getValueAt(row, column)
 		data.append(row_data)
 	return data
-	
 
-<<<<<<< HEAD
-def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None):
-=======
 def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None, headers_list=None):
->>>>>>> origin/master
 	"""
 	DESCRIPTION: This function converts list of dictionaries to a dataset
 	PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
@@ -43,14 +38,10 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None,
 	LOGGER.trace("convert_list_to_dataset(list_var=%s)" % (list_var))
 	if not isinstance(list_var, collections.Iterable):
 		return list_var
-<<<<<<< HEAD
-	if column_order is not None:
-=======
 
 	if headers_list is not None:
 		headers = column_names = headers_list
 	elif column_order is not None:
->>>>>>> origin/master
 		headers = column_names = column_order
 	else:
 		headers = column_names = list_var[0].keys()
@@ -58,9 +49,9 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None,
 	if titalize_headers:
 		headers = [name.title() for name in column_names]
 		
-	
+
 	data = []
-	
+
 	for row in list_var:
 		row_data = []
 		for column in column_names:
@@ -71,12 +62,8 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None,
 				value = str(row[column]) if row[column] is not None else None
 			row_data.append(value)
 		data.append(row_data)
-<<<<<<< HEAD
-	
-=======
->>>>>>> origin/master
 	return system.dataset.toDataSet(headers, data)
-	
+
 
 def convert_properties_to_dictionary(obj):
 	"""
@@ -103,7 +90,7 @@ def convert_properties_to_dictionary(obj):
 		# anything else
 		return obj
 
-	
+
 def convert_from_camel_case_to_caps(string):
 	"""
 	DESCRIPTION: Converts a string from camel case to all caps

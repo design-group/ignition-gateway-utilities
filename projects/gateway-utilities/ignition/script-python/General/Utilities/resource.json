@@ -9,15 +9,9 @@
   "attributes": {
     "lastModification": {
       "actor": "external",
-<<<<<<< HEAD
       "timestamp": "2023-02-09T00:38:56Z"
     },
     "lastModificationSignature": "1d3cd4bf1589c8c01b9757304b1caad4764da9b0cd1321d26830520eccb6511f",
-=======
-      "timestamp": "2022-11-22T22:24:23Z"
-    },
-    "lastModificationSignature": "bd8298c6d0e5a1fe1ee30ab142e69ce9e33889bd2aefee33662222fe98979169",
->>>>>>> origin/master
     "hintScope": 2
   }
 }

@@ -1,12 +1,7 @@
 {
   "title": "Gateway Utilities",
   "description": "A Collection of Gateway Utility Scripts and functions to streamline development and integration",
-<<<<<<< HEAD
   "parent": "",
   "enabled": true,
   "inheritable": true
-=======
-  "enabled": true,
-  "inheritable": false
->>>>>>> origin/master
 }
