@@ -30,7 +30,11 @@ def convert_dataset_to_list(dataset):
 	return data
 	
 
+<<<<<<< HEAD
 def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None):
+=======
+def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None, headers_list=None):
+>>>>>>> origin/master
 	"""
 	DESCRIPTION: This function converts list of dictionaries to a dataset
 	PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
@@ -39,7 +43,14 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None)
 	LOGGER.trace("convert_list_to_dataset(list_var=%s)" % (list_var))
 	if not isinstance(list_var, collections.Iterable):
 		return list_var
+<<<<<<< HEAD
 	if column_order is not None:
+=======
+
+	if headers_list is not None:
+		headers = column_names = headers_list
+	elif column_order is not None:
+>>>>>>> origin/master
 		headers = column_names = column_order
 	else:
 		headers = column_names = list_var[0].keys()
@@ -60,7 +71,10 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None)
 				value = str(row[column]) if row[column] is not None else None
 			row_data.append(value)
 		data.append(row_data)
+<<<<<<< HEAD
 	
+=======
+>>>>>>> origin/master
 	return system.dataset.toDataSet(headers, data)
 	
 

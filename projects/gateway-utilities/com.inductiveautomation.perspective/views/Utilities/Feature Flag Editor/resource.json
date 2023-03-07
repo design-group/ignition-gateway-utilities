@@ -4,8 +4,13 @@
   "restricted": false,
   "overridable": true,
   "files": [
+<<<<<<< HEAD
     "thumbnail.png",
     "view.json"
+=======
+    "view.json",
+    "thumbnail.png"
+>>>>>>> origin/master
   ],
   "attributes": {
     "lastModification": {
