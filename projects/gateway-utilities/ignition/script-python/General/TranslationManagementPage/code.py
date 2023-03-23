@@ -1,4 +1,7 @@
-
+"""
+General.Translation Management Page
+DESCRIPTION: This page is used to manage translations for a project
+"""
 def import_template(view, event):
 	"""
 	DESCRIPTION: converts a template file from csv into json, and displays it in a preview table
@@ -31,3 +34,4 @@ def download_template_file(data):
 			english_spanish["Spanish"]
 		)
 	system.perspective.download("translation.csv", translations)
+
