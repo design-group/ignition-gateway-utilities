@@ -26,7 +26,6 @@ def download_template_file(data):
 	data = General.Conversion.convert_dataset_to_list(data)
 	translations = "English, Spanish\n"
 	for english_spanish in data:
-		system.perspective.print(data)
 		translations += "%s,%s\n"%(
 			english_spanish["English"],
 			english_spanish["Spanish"]
