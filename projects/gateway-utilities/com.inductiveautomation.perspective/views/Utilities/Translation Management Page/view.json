@@ -284,7 +284,7 @@
                   "dom": {
                     "onClick": {
                       "config": {
-                        "script": "\tViews.TranslationManagementPage.import_template(self,event)\n\t\t\n\t\t"
+                        "script": "\tGeneral.TranslationManagementPage.import_template(self,event)\n\t\t\n\t\t"
                       },
                       "scope": "G",
                       "type": "script"
@@ -320,7 +320,7 @@
                   "component": {
                     "onActionPerformed": {
                       "config": {
-                        "script": "\tViews.TranslationManagementPage.download_template_file(self.view.custom.data)"
+                        "script": "\tGeneral.TranslationManagementPage.download_template_file(self.view.custom.data)"
                       },
                       "scope": "G",
                       "type": "script"
