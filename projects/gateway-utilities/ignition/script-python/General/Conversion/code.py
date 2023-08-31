@@ -15,7 +15,8 @@ def convert_dataset_to_list(dataset):
 	PARAMETERS: dataset (REQ, dataset): The dataset to be converted to a list of dictionaries
 	"""
 	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
-	if isinstance(dataset, collections.Iterable):
+	
+	if not hasattr(dataset, "getColumnNames"):
 		return dataset
 	
 	column_names = dataset.getColumnNames()
