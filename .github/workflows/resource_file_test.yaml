@@ -11,6 +11,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-20.04
+    container: python:2.7.18-buster
 
     strategy:
       matrix:
