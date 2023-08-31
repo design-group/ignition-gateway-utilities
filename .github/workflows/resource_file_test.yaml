@@ -1,32 +1,16 @@
-name: Resource File Check
+name: Automated Tests
 
-on:
-  push:
-    branches:
-      - "master"
-  pull_request:
-    branches:
-      - "master"
-  
+on: [pull_request, workflow_dispatch]
+      
 jobs:
   test:
     runs-on: ubuntu-20.04
     container: python:2.7.18-buster
 
-    strategy:
-      matrix:
-        # Run in all these versions of Python
-        python-version: [2.7]
-
     steps:
         # Checkout the latest code from the repo
       - name: Checkout repo
         uses: actions/checkout@v2
-        # Setup which version of Python to use
-      - name: Set Up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
         # Display the Python version being used
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
@@ -36,5 +20,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
         # Run the tests. I'm using pytest and the file is in the tests directory.
-      - name: Resource File Check
+      - name: Check Files
         run: find ./tests -type f -name "*.py" | python -m pytest -s -rfsE -p no:cacheprovider
