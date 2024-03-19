@@ -71,9 +71,12 @@ def read_json_file(file_path):
 		# because the java exception is not raised in a way that is caught by it
 		raise GatewayFileException("Error loading %s, not a valid JSON dictionary" % file_path)
 
+def read_markdown_file(file_path):
+	return system.file.readFileAsString(file_path)
 
 FILE_READERS = {
 	".json": read_json_file,
+	".md": read_markdown_file
 }
 
 # NOTE: If we are not executing in the gateway scope, 

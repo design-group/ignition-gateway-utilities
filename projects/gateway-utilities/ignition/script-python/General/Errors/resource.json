@@ -1,0 +1,17 @@
+{
+  "scope": "A",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "code.py"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "ASPYKSMA",
+      "timestamp": "2023-10-30T23:37:43Z"
+    },
+    "hintScope": 2,
+    "lastModificationSignature": "abc2bba9af0adce139f9d59aa9c6617d3c1bc2616d8b5f6900bae291045defb2"
+  }
+}

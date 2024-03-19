@@ -7,6 +7,7 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
+
 LOGGER = system.util.getLogger("General.Conversion")
 
 def convert_dataset_to_list(dataset):
@@ -15,10 +16,15 @@ def convert_dataset_to_list(dataset):
 	PARAMETERS: dataset (REQ, dataset): The dataset to be converted to a list of dictionaries
 	"""
 	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
-	
-	if not hasattr(dataset, "getColumnNames"):
+	if dataset is None:
 		return dataset
-	
+	if isinstance(dataset, collections.Iterable):
+		return dataset
+	if isinstance(dataset, (int, long)):
+		return dataset
+	if isinstance(dataset, str):
+		return dataset
+
 	column_names = dataset.getColumnNames()
 
 	data = []

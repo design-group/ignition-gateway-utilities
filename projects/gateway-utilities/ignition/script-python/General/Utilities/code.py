@@ -7,6 +7,8 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
+import json
+
 LOGGER = system.util.getLogger("General.Utilities")
 
 class JsonPathException(Exception):
@@ -68,7 +70,18 @@ def read_json_path(json_object, json_path):
 	except Exception as exception:
 			# NOTE: We may be compiling something that we know isnt present sometimes, lets make this null if it isnt
 		raise JsonPathException("Failed to read json path for object %s element %s : %s -  EXCEPTION:%s" %
-																			(json_path, current_path, value, exception))
+																	(json_path, current_path, value, exception))
+def is_valid_json(data):
+	try:
+		if isinstance(data, dict):
+			json.dumps(data)
+		else:
+			json.loads(data)
+		return True
+	except ValueError:
+		return False
+	except TypeError:
+		return False
 
 
 def get_function_qualified_path(func):
