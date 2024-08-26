@@ -33,3 +33,24 @@ General.Multithreading.wait_for_async_execution(
                 ]
         )
 ```
+
+#### Timed
+Convenience functions for timing scripts. This includes the ability to time a script and log the results. This could be used to identify bottlenecks in a script. The results are logged to the gateway logs under the `General.Timed` logger.
+
+##### Example
+```python
+# NOTE: function to collect timing report of all subfunctions
+@General.Timed.collect_timing_report
+def myFunction():
+        sub_function()
+        sub_function_1()
+
+# NOTE: sub function to be timed
+@General.Timed.execute_timed
+def sub_function_1():
+        #NOTE: do something
+
+@General.Timed.execute_timed
+def sub_function_2():
+        #NOTE: do something
+```
