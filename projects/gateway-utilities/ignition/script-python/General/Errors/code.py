@@ -9,7 +9,12 @@ from java.lang import Throwable
 LOGGER = system.util.getLogger("General.Errors")
 
 class ExceptionWithDetails(Exception):
-	def __init__(self, exception_message=None, LOGGER=LOGGER, exception=None, isUserFriendly=False):
+	"""
+	DESCRIPTION: This class is a custom exception that will log the exception message and stack trace.
+	PARAMETERS:
+		exception_message (str): The message to be logged.
+	"""
+	def __init__(self, exception_message=None, logger=LOGGER, exception=None, isUserFriendly=False): #pylint: disable=unused-argument
 		if isinstance(exception, ExceptionWithDetails):
 			self.__dict__.update(exception.__dict__)
 			return 
@@ -38,13 +43,14 @@ class ExceptionWithDetails(Exception):
 		
 		# NOTE: IF this is a direct exception with details, lets throw it in the logs
 		if isinstance(self, ExceptionWithDetails):
-			LOGGER.error(self.message, stack_trace)
+			logger.error(self.message, stack_trace)
 
 		super(ExceptionWithDetails, self).__init__(self.message)
 
 def get_exception():
 	"""
-	If you put this in a generic try...except block that continues to raise the error, you can cleanly get a defined error message in the logs, without changing applciation logic.
+	If you put this in a generic try...except block that continues to raise the error, you can cleanly get a 
+	defined error message in the logs, without changing applciation logic.
 	
 	Example Error: 
 		(<module:General.Conversion>, LINE 270 ""): sequence item 0: expected string, NoneType found
