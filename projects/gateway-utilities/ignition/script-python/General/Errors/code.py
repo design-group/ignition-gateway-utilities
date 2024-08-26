@@ -16,7 +16,7 @@ class ExceptionWithDetails(Exception):
 		
 		stack_trace = Throwable(str(exception_message))
 		message_contents = []
-		if type(self) == ExceptionWithDetails:
+		if isinstance(self, ExceptionWithDetails):
 			exception_details = get_exception()
 			message_contents.append("EXCEPTION: %s" % exception_details)
 		
@@ -25,7 +25,8 @@ class ExceptionWithDetails(Exception):
 			
 			if hasattr(exception, 'getCause'):
 				cause = exception.getCause()
-				message_contents.append("CAUSE: %s" % cause.getMessage())
+				if hasattr(cause, 'getMessage'):
+					message_contents.append("CAUSE: %s" % cause.getMessage())
 
 				if hasattr(cause, 'getStackTrace'):
 					stack_trace.setStackTrace(cause.getStackTrace())
@@ -36,7 +37,7 @@ class ExceptionWithDetails(Exception):
 		self.message = ', '.join(message_contents)
 		
 		# NOTE: IF this is a direct exception with details, lets throw it in the logs
-		if type(self) == ExceptionWithDetails:
+		if isinstance(self, ExceptionWithDetails):
 			LOGGER.error(self.message, stack_trace)
 
 		super(ExceptionWithDetails, self).__init__(self.message)
