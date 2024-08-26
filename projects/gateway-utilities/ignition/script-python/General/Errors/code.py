@@ -64,18 +64,3 @@ def get_exception():
 	linecache.checkcache(filename)
 	line = linecache.getline(filename, lineno, f.f_globals)
 	return '{}({}, LINE {} "{}"): {}'.format(exc_type.__name__, filename, lineno, line.strip(), exc_obj)
-
-def print_error(source_logger, error_message=None, sessionId=None, pageId=None):
-	"""
-	DESCRIPTION: Prints an error to the console and the logs.
-	PARAMETERS: source_logger (LOGGER, REQ): The LOGGER to use for logging the error.
-				error_message (string, OPT): The error message to print.
-				sessionId (string, OPT): The session ID to print the error to.
-				pageId (string, OPT): The page ID to print the error to.
-	"""
-	LOGGER.trace("General.Errors.print_error(source_logger=%s, error_message=%s, sessionId=%s, pageId=%s)" % (source_logger, error_message, sessionId, pageId))
-	source_logger.error(error_message)
-	print(error_message)
-	
-	if sessionId and pageId:
-		system.perspective.print(error_message, sessionId, pageId)
