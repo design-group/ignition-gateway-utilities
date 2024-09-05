@@ -9,7 +9,7 @@ import json
 
 LOGGER = system.util.getLogger("General.Queries")
 
-def run_named_query(path, as_json=True, params={}): # pylint: disable=dangerous-default-value
+def run_named_query(path, as_json=True, params=None):
 	"""
 	DESCRIPTION: runs a named query provided parameters and a path, returns response in JSON
 	PARAMETERS: path (REQ, string): path to the named query to be run
@@ -18,6 +18,7 @@ def run_named_query(path, as_json=True, params={}): # pylint: disable=dangerous-
 	RETURNS: dict: response from the named query or dataset if as_json is False
 	"""
 	project = system.project.getProjectName()
+	params = {} if not params else params
 	try:
 		
 		try: 
@@ -36,7 +37,7 @@ def run_named_query(path, as_json=True, params={}): # pylint: disable=dangerous-
 		raise General.Errors.ExceptionWithDetails("Error getting named query at path: %s, with params: %s" 
 											% (path, params), LOGGER, e)
 
-def run_scalar_named_query_json(path, params={}): # pylint: disable=dangerous-default-value
+def run_scalar_named_query_json(path, params=None):
 	"""
 	DESCRIPTION: runs a scalar named query provided parameters and a path, returns response in JSON
 	PARAMETERS: path (REQ, string): path to the named query to be run
@@ -45,8 +46,8 @@ def run_scalar_named_query_json(path, params={}): # pylint: disable=dangerous-de
 	RETURNS: dict: response in JSON
 	"""
 	project = system.project.getProjectName()
+	params = {} if not params else params
 	try:
-		
 		try: 
 			value = system.db.runNamedQuery(path, params)
 		except java.lang.ClassCastException: 

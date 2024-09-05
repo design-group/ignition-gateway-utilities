@@ -146,7 +146,7 @@ def convert_dict_to_dropdown(options):
 		dropdown_options = [{"label": val, "value": key} for key, val in options.iteritems()]
 	return sorted(dropdown_options, key=lambda opt: opt['value'])
 
-def convert_str_to_seconds(seconds):
+def convert_seconds_to_str_format(seconds):
 	"""
 	DESCRIPTION: Converts seconds to a string in the format of HH:MM:SS
 	PARAMETERS: seconds(str) - The number of seconds to convert
