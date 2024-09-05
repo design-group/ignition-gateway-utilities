@@ -9,14 +9,19 @@ from java.lang import Throwable
 LOGGER = system.util.getLogger("General.Errors")
 
 class ExceptionWithDetails(Exception):
-	def __init__(self, exception_message=None, LOGGER=LOGGER, exception=None, isUserFriendly=False):
+	"""
+	DESCRIPTION: This class is a custom exception that will log the exception message and stack trace.
+	PARAMETERS:
+		exception_message (str): The message to be logged.
+	"""
+	def __init__(self, exception_message=None, logger=LOGGER, exception=None):
 		if isinstance(exception, ExceptionWithDetails):
 			self.__dict__.update(exception.__dict__)
 			return 
 		
 		stack_trace = Throwable(str(exception_message))
 		message_contents = []
-		if type(self) == ExceptionWithDetails:
+		if isinstance(self, ExceptionWithDetails):
 			exception_details = get_exception()
 			message_contents.append("EXCEPTION: %s" % exception_details)
 		
@@ -25,7 +30,8 @@ class ExceptionWithDetails(Exception):
 			
 			if hasattr(exception, 'getCause'):
 				cause = exception.getCause()
-				message_contents.append("CAUSE: %s" % cause.getMessage())
+				if hasattr(cause, 'getMessage'):
+					message_contents.append("CAUSE: %s" % cause.getMessage())
 
 				if hasattr(cause, 'getStackTrace'):
 					stack_trace.setStackTrace(cause.getStackTrace())
@@ -36,14 +42,15 @@ class ExceptionWithDetails(Exception):
 		self.message = ', '.join(message_contents)
 		
 		# NOTE: IF this is a direct exception with details, lets throw it in the logs
-		if type(self) == ExceptionWithDetails:
-			LOGGER.error(self.message, stack_trace)
+		if isinstance(self, ExceptionWithDetails):
+			logger.error(self.message, stack_trace)
 
 		super(ExceptionWithDetails, self).__init__(self.message)
 
 def get_exception():
 	"""
-	If you put this in a generic try...except block that continues to raise the error, you can cleanly get a defined error message in the logs, without changing applciation logic.
+	If you put this in a generic try...except block that continues to raise the error, you can cleanly get a 
+	defined error message in the logs, without changing applciation logic.
 	
 	Example Error: 
 		(<module:General.Conversion>, LINE 270 ""): sequence item 0: expected string, NoneType found
@@ -63,18 +70,3 @@ def get_exception():
 	linecache.checkcache(filename)
 	line = linecache.getline(filename, lineno, f.f_globals)
 	return '{}({}, LINE {} "{}"): {}'.format(exc_type.__name__, filename, lineno, line.strip(), exc_obj)
-
-def print_error(source_logger, error_message=None, sessionId=None, pageId=None):
-	"""
-	DESCRIPTION: Prints an error to the console and the logs.
-	PARAMETERS: source_logger (LOGGER, REQ): The LOGGER to use for logging the error.
-				error_message (string, OPT): The error message to print.
-				sessionId (string, OPT): The session ID to print the error to.
-				pageId (string, OPT): The page ID to print the error to.
-	"""
-	LOGGER.trace("General.Errors.print_error(source_logger=%s, error_message=%s, sessionId=%s, pageId=%s)" % (source_logger, error_message, sessionId, pageId))
-	source_logger.error(error_message)
-	print(error_message)
-	
-	if sessionId and pageId:
-		system.perspective.print(error_message, sessionId, pageId)

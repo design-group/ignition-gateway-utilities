@@ -29,26 +29,39 @@ def export_table_to_csv(table):
 
 def get_dataset(table):
 	"""
-	Description: Returns dataset built from table component
-	PARAMETERS:
-		table: Table component to get dataset from
-	RETURNS: dataset built from table component with proper formatting 
+	DESCRIPTION: Generates a dataset from a table component with formatted headers.
+	PARAMETERS: 
+		table (REQ, Table): The table component to get the dataset from. 
+			It should contain properties `props.columns` and `props.data`.
+	RETURNS: 
+		dataset (Dataset): A dataset object created from the table component with headers in uppercase,
+			formatted according to the given logic.
 	"""
 	table_data = []
-	render_list = [column['render'] for column in table.props.columns]
-	
-	# Add {"column0": value, "column1": value, ...} to represent the column titles
-	table_data.append({"column%s" % index: header_title for index, header_title in enumerate(get_column_titles(table))})
-	headers = ["column%s" % index for index in range(len(render_list))]
-	
+
+	headers = [str(column.field) for column in table.props.columns if column.get('visible', True)]
+	replaced_headers = {
+		str(column.field):str(column.header.title) for column in table.props.columns if column.header.title != ""
+	}
+
 	for row in table.props.data:
 		temp_dict = {}
-		for index, val in enumerate(row.values()):
-			if render_list[index] == "date":
-				temp_dict.update({"column%s" % index: system.date.format(val, "yy/MM/dd HH:mm:ss")})
+		for key, val in row.items():
+			if key in replaced_headers:
+				key_name = replaced_headers[key]
 			else:
-				temp_dict.update({"column%s" % index: round(val, 2)})
+				key_name = key
+			
+			key_name = str(key_name).upper()
+			temp_dict[key_name] = val
+
 		table_data.append(temp_dict)
+	
+	for index, header in enumerate(headers):
+		if header in replaced_headers:
+			headers[index] = replaced_headers[header].upper()
+		else:
+			headers[index] = header.upper()
 
 	return General.Conversion.convert_list_to_dataset(list_var=table_data, headers_list=headers)
 

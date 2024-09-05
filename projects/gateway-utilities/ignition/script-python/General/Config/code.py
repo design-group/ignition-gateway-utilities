@@ -23,6 +23,7 @@ def get_config_value(config_name, config_key=None, force_refresh=False):
 				config_key (REQ, str) - the key to retrieve from the config file
 									(if omitted, the entire thresholds file is returned)
 				force_refresh (OPT, bool) - force a refresh of the config file
+	RETURNS: String - the value of the key in the config file
 	"""
 
 	file_path = '%s/%s.json' % (CONFIG_SOURCE_DIRECTORY, config_name)

@@ -62,6 +62,7 @@ class MultiThreadedException(Exception):
 	"""
 	DESCRIPTION: This exception will take a list of exceptions, and will print them all out when raised.
 	PARAMETERS: exceptions (REQ, list[Exception]) - A list of exceptions that were raised
+	RETURNS: None
 	"""
 
 	def __init__(self, exceptions):
@@ -91,6 +92,7 @@ def wait_for_async_execution(func, kwargs_list=None, max_threads=-1, timeout_sec
 				max_threads (OPT, int) - The maximum number of threads to be used.
 										 If -1, it will just execute with as many threads as it can
 				timeout_seconds (OPT, int) - The maximum number of seconds to wait for the threads to finish
+	RETURNS: None
 	"""
 	# NOTE: If our function showed up as a name, we would have to use the following line to get the actual function
 	if not callable(func):

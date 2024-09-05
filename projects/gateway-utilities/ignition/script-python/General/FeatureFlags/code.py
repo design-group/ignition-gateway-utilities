@@ -30,6 +30,7 @@ def get_feature_flags(force_refresh=False):
 		If the feature flags have not been retrieved, they will be retrieved and
 		cached for future use.
 	PARAMETERS: force_refresh (OPT, bool) - Whether to force a refresh of the feature flag config file
+	RETURNS: dict - The feature flags
 	"""
 
 	try:
@@ -54,6 +55,7 @@ def get_feature_flag_table(force_refresh=False):
 			{ "category_id": "Scripting", "flag_id": "myFeature.newFunction","enabled":true },
 			{ "category_id": "UI-Features", "flag_id": "myFeature.UIScreen","enabled":true }
 			]
+	RETURNS: list - The feature flags in a table friendly format
 	"""
 
 	flags = get_feature_flags(force_refresh=force_refresh)
@@ -75,6 +77,7 @@ def is_feature_enabled(category_id, flag_id, force_refresh=False):
 	PARAMETERS category_id (REQ, str) - The category ID of the feature flag
 			   flag_id (REQ, str) - The flag ID of the feature flag
 			   force_refresh (OPT, bool) - Whether to force a refresh of the feature flag config file
+	RETURNS: bool - Whether the feature flag is enabled
 	"""
 
 	flags = get_feature_flags(force_refresh=force_refresh)
@@ -97,6 +100,7 @@ def if_enabled(category_id, flag_id, old_func=None):
 	EXAMPLE: Can be used to decorate a scripting function with the following syntax
 		@General.FeatureFlags.if_enabled("myCategory", "myFeature")
 			def myFunction ...
+	RETURNS: function - The decorated function
 	"""
 	def flag_wrapper(func):
 		"""
@@ -123,6 +127,7 @@ def set_feature_flag(category_id, flag_id, enabled):
 	PARAMETERS category_id (REQ, str) - The category ID of the feature flag
 			   flag_id (REQ, str) - The flag ID of the feature flag
 			   enabled (REQ, bool) - The enabled/disabled setting of the feature flag
+	RETURNS: None
 	"""
 
 	flags = get_feature_flags(force_refresh=True)
@@ -141,6 +146,7 @@ def delete_feature_flag(category_id, flag_id):
 	DESCRIPTION: Deletes a feature flag
 	PARAMETERS category_id (REQ, str) - The category ID of the feature flag
 			   flag_id (REQ, str) - The flag ID of the feature flag
+	RETURNS: None
 	"""
 
 	flags = get_feature_flags(force_refresh=True)

@@ -38,13 +38,17 @@ def handleMessage(payload):
 	return func_reference(*args, **kwargs)
 
 """
-import os
+import csv
 import General.Utilities
+import os
+from copy import deepcopy
 
 LOGGER = system.util.getLogger("GatewayFileContents")
-
+FILE_READERS = {
+	".json": read_json_file,
+	".md": read_markdown_file
+}
 IGNITION_GLOBALS = system.util.getGlobals()
-
 # NOTE: This key is the key inside the globals that gateway-files are stored in
 GATEWAY_FILES_KEY = "gateway-files"
 IGNITION_GLOBALS.setdefault(GATEWAY_FILES_KEY, {})
@@ -63,6 +67,7 @@ def read_json_file(file_path):
 	"""
 	DESCRIPTION: Json parser that will automatically read a json file and return it as a python object
 	PARAMETERS: file_path (REQ, str) - The file path to the desired file, from the ignition directory
+	RETURNS: dict - The json file as a python object
 	"""
 	try:
 		return system.util.jsonDecode(system.file.readFileAsString(file_path))
@@ -70,29 +75,57 @@ def read_json_file(file_path):
 		# NOTE: I do not use a specific exception here,
 		# because the java exception is not raised in a way that is caught by it
 		raise GatewayFileException("Error loading %s, not a valid JSON dictionary" % file_path)
+	
+def parse_csv_into_list(file_string, as_dataset=False):
+	"""
+	DESCRIPTION: Parses csv string into a list of dictionaries or a dataset object
+	VARIABLES: file_string, (REQ, str): csv data
+			as_dataset, (bool): flag to return as a dataset or list
+	RETURNS: list, (list): csv formatted into a list of dictionaries OR
+			dataset, (dataset): csv formatted into an Ignition Dataset
+	"""
+	# NOTE: Account for the BOM character in the file since excel likes to add it
+	file_string = file_string.replace('\xef\xbb\xbf', '')
+	file_string.replace('\r', '').replace('\r', '')
+	
+	f = file_string.split('\n')
+	
+	reader = csv.reader(f)
+
+	row_data = []
+	for index, row in enumerate(reader):
+		if index == 0:
+			headers = row
+			continue
+		if len(row) != len(headers):
+			continue
+		row_data.append(row)
+	
+	dataset = system.dataset.toDataSet(headers, row_data)
+	if as_dataset:
+		return dataset
+	return General.Conversion.convert_dataset_to_list(dataset)
 
 def read_markdown_file(file_path):
 	return system.file.readFileAsString(file_path)
 
-FILE_READERS = {
-	".json": read_json_file,
-	".md": read_markdown_file
-}
-
 # NOTE: If we are not executing in the gateway scope, 
 # then file paths will be relative to the client which we dont want. 
 # Sending a request to the gateway will allow it to read gateway files
-@General.Utilities.execute_on_gateway
+@General.Utilities.execute_on_gateway()
 def get_gateway_file_contents(file_path
 						, force_refresh=False
 						, store_in_globals=True
-						, read_file_as_bytes=False):
+						, read_file_as_bytes=False
+						, get_copy=False):
 	"""
 	DESCRIPTION: Get the contents of a file from the gateway via a message handler to the gateway
 	PARAMETERS: file_path (REQ, str) - The file path to the desired file, from the ignition directory
 				force_refresh (OPT, bool) - If true, will force the file to be read from the gateway
 				store_in_globals (OPT, bool) - If true, will store the file contents in the globals
 				read_file_as_bytes (OPT, bool) - If true, will read the file as bytes instead of a string
+				get_copy (OPT, bool) - If true, will return a copy of the file contents instead of an object reference
+	RETURNS: str - The contents of the file
 	"""
 
 	if not os.path.exists(file_path):
@@ -130,6 +163,10 @@ def get_gateway_file_contents(file_path
 
 		LOGGER.info("Updating Gateway File in Cache: %s" % file_path)
 
+	# NOTE: If we do not want to modify the Globals Object, we need to return a copy instead of the reference object
+	if get_copy:
+		return deepcopy(IGNITION_GLOBALS[GATEWAY_FILES_KEY][file_path]['data'])
+
 	# NOTE: Regardless of if we updated the data, return it anyway
 	return IGNITION_GLOBALS[GATEWAY_FILES_KEY][file_path]['data']
 
@@ -140,6 +177,7 @@ def set_gateway_file_contents(file_path, file_data, store_in_globals=True):
 	PARAMETERS: file_path (REQ, str) - The file path to the desired file, from the ignition directory
 				file_data (REQ, str) - The data to write to the file
 				store_in_globals (OPT, bool) - If we should store the file in the globals cache
+	RETURNS: None
 	"""
 	# NOTE: Check to verify that file file_data is a string, else try to convert json
 	if not isinstance(file_data, str):
