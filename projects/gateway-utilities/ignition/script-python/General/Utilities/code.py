@@ -64,7 +64,7 @@ def execute_on_gateway(timeout_seconds=60, remote_server=None, func_path=None):
 	
 	def wrapper(func):
 		"""
-		Description: Initialize wrapper function
+		DESCRIPTION: Initialize wrapper function
 		"""
 		def gateway_function_wrapper(*args, **kwargs):
 			"""
