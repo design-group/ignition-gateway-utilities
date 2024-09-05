@@ -20,7 +20,6 @@ def run_named_query(path, as_json=True, params=None):
 	project = system.project.getProjectName()
 	params = {} if not params else params
 	try:
-		
 		try: 
 			dataset = system.db.runNamedQuery(path, params)
 		except java.lang.ClassCastException: 
