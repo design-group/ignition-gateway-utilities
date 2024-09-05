@@ -14,7 +14,7 @@ class ExceptionWithDetails(Exception):
 	PARAMETERS:
 		exception_message (str): The message to be logged.
 	"""
-	def __init__(self, exception_message=None, logger=LOGGER, exception=None, isUserFriendly=False): #pylint: disable=unused-argument
+	def __init__(self, exception_message=None, logger=LOGGER, exception=None):
 		if isinstance(exception, ExceptionWithDetails):
 			self.__dict__.update(exception.__dict__)
 			return 
