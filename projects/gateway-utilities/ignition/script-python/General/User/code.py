@@ -1,7 +1,7 @@
 """
 	General.User
-    
-    DESCRIPTION: All queries related to user data
+	
+	DESCRIPTION: All queries related to user data
 """
 
 import json
@@ -37,20 +37,20 @@ def get_user_preferences(username):
 	return json.loads(result)	
 
 def set_user_preferences(username, user_preferences):
-    """
-    DESCRIPTION: Set user preferences
-    PARAMETERS: username (str) : Name of the user to be returned
-                user_preferences (dict) : User preferences to be stored in the database
-    RETURNS: None
-    Raises: TypeError if user_preferences is a string
-    """
-    if isinstance(user_preferences, (unicode, str)):
-        raise TypeError("user_preferences must be a dictionary, not a string")
+	"""
+	DESCRIPTION: Set user preferences
+	PARAMETERS: username (str) : Name of the user to be returned
+				user_preferences (dict) : User preferences to be stored in the database
+	RETURNS: None
+	Raises: TypeError if user_preferences is a string
+	"""
+	if isinstance(user_preferences, (unicode, str)):
+		raise TypeError("user_preferences must be a dictionary, not a string")
 
-    query_path = "User/Preferences/UPDATE/Set User Pref"
-    user_preferences = General.Conversion.convert_properties_to_dictionary(user_preferences)
-    params = {'userName': username, 'userSettings': system.util.jsonEncode(user_preferences)}
-    General.Queries.run_named_query(query_path, params=params)
+	query_path = "User/Preferences/UPDATE/Set User Pref"
+	user_preferences = General.Conversion.convert_properties_to_dictionary(user_preferences)
+	params = {'userName': username, 'userSettings': system.util.jsonEncode(user_preferences)}
+	General.Queries.run_named_query(query_path, params=params)
 
 def set_user_preference_value(session, preference_name, preference_value):
 	"""
