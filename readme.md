@@ -21,7 +21,7 @@ Convenience functions for accessing feature flags on the gateway. This includes 
 #### [User Preferences](./docs/user-preferences.md)
 Convenience functions for managing user preferences. This includes the ability to store and retrieve user preferences, default preferences for new users, session-based preference management, and individual preference updates. 
 
-**NOTE** Depending on the database type (MSSQL or Postgres), you will need to add named queries(given in documentation) to the appropriate folders for the user preferences to work. Consult the documentation below for more information.
+**NOTE** Named queries are given for both MSSQL and Postgres. Depending on your database type you will need to use the appropriate queries and ensure the location of the queries matches paths in the `User` script. For more information you can consult the [User Preferences documentation](./docs/user-preferences.md).
 
 #### Multithreading
 Convenience functions for running scripts in parallel. This includes the ability to run scripts in parallel with a set thread count. 
