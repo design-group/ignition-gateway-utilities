@@ -215,9 +215,10 @@ def build_condition(column_name, value, negate=False):
 		return condition
 
 	except Exception as e:
-		raise General.Errors.ExceptionWithDetails("Error building condition for column %s with value %s" % (column_name, value), LOGGER, e)
+		raise General.Errors.ExceptionWithDetails("Error building condition for column %s with value %s" 
+				% (column_name, value), LOGGER, e)
 
-def run_filtered_query(path, params=None, filter_dict=None, offset=0, limit=25, acceptable_filter_columns=None, include_where=True):
+def run_filtered_query(path, params=None, filter_dict=None, offset=0, limit=25, acceptable_filter_columns=None, include_where=True):#pylint: disable=line-too-long
 	"""
 	DESCRIPTION: Runs a named query with a filter dictionary
 	PARAMETERS: path (REQ, string): path to the named query to be run
@@ -237,7 +238,11 @@ def run_filtered_query(path, params=None, filter_dict=None, offset=0, limit=25, 
   
 	if acceptable_filter_columns is None:
 		acceptable_filter_columns = []
-	query_string = General.Queries.get_query_filter(filter_dict=filter_dict, include_where=include_where, acceptable_filter_columns=acceptable_filter_columns)
+	query_string = General.Queries.get_query_filter(
+		filter_dict=filter_dict, 
+		include_where=include_where, 
+		acceptable_filter_columns=acceptable_filter_columns
+	)
 	query_string += " LIMIT %s OFFSET %s" % (limit, offset)
 	params["filtering_string"] = query_string
 	return General.Queries.run_named_query(path, params=params)
