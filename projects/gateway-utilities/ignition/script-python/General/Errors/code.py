@@ -15,14 +15,15 @@ class ExceptionWithDetails(Exception):
 	PARAMETERS:
 		exception_message (str): The message to be logged.
 	"""
-def __init__(self, exception_message=None, logger=LOGGER, exception=None, user_message=None):
+	# pylint: disable=invalid-name
+	def __init__(self, exception_message=None, logger=LOGGER, exception=None, user_message=None):
 		if isinstance(exception, ExceptionWithDetails):
 			self.__dict__.update(exception.__dict__)
 			return 
 
 		if user_message is not None:
 			self.user_message = user_message
-   
+
 		stack_trace = Throwable(str(exception_message))
 		message_contents = []
 		if type(self) == ExceptionWithDetails: # pylint: disable=unidiomatic-typecheck
