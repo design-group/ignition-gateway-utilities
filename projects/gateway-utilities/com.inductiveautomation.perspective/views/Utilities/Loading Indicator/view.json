@@ -1,0 +1,82 @@
+{
+  "custom": {},
+  "params": {
+    "label": "Loading"
+  },
+  "propConfig": {
+    "params.label": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 205,
+      "width": 318
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Image"
+        },
+        "position": {
+          "basis": "125px",
+          "shrink": 0
+        },
+        "props": {
+          "fit": {
+            "height": 125,
+            "mode": "absolute",
+            "width": 125
+          },
+          "source": "/res/perspective/images/standard-session-loader.gif",
+          "style": {
+            "marginTop": "8px",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.image"
+      },
+      {
+        "meta": {
+          "name": "Loading Label"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.label"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "textStyle": {
+            "font": "--paragraph-medium",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center",
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "backgroundColor": "transparent"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

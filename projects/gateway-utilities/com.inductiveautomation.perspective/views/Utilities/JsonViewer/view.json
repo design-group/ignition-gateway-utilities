@@ -1,0 +1,177 @@
+{
+  "custom": {
+    "jsonContent": {}
+  },
+  "params": {
+    "emptyMessage": "Provide valid a jsonObject or jsonString parameter.",
+    "expandAll": false,
+    "jsonObject": {},
+    "jsonString": null,
+    "obscureValues": false
+  },
+  "propConfig": {
+    "custom.jsonContent": {
+      "binding": {
+        "config": {
+          "expression": "coalesce({view.params.jsonObject}, {view.params.jsonString})"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.emptyMessage": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.expandAll": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.jsonObject": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.jsonString": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.obscureValues": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 400,
+      "width": 400
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "JsonViewer"
+        },
+        "position": {
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "coalesce({view.custom.jsonContent}, \"\") !\u003d \"\""
+              },
+              "type": "expr"
+            }
+          },
+          "props.items": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "expandAll": "{view.custom.expandAll}",
+                  "jsonContent": "{view.custom.jsonContent}",
+                  "obscureValues": "{view.params.obscureValues}"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tjsonContent \u003d General.Conversion.convert_properties_to_dictionary(value.jsonContent)\n\t\n\tif (jsonContent or \u0027\u0027) \u003d\u003d \u0027\u0027:\n\t\treturn []\n\t\n\tif isinstance(jsonContent, (str, unicode)):\n\t\tjsonObject \u003d system.util.jsonDecode(jsonContent)\n\telif not isinstance(jsonContent, (dict, list)):\n\t\traise Exception(\"Must provide valid json content\")\n\t\n\tdef getItemStruct(label, data, items):\n\t\tif not (isinstance(data, dict) or isinstance(data, list)) and not value.obscureValues:\n\t\t\tlabel \u003d \"%s: %s\" % (label, data)\n\t\n\t\treturn {\n\t\t\t\t  \"label\": label,\n\t\t\t\t  \"expanded\": value.expandAll,\n\t\t\t\t  \"data\": data,\n\t\t\t\t  \"items\": items\n\t\t\t\t}\n\t\n\tdef getItems(key, val):\n\n\t\tif isinstance(val, dict):\n\t\t\treturn [getItemStruct(k, v, getItems(k, v)) for k, v in val.items()]\n\t\t\n\t\telif isinstance(val, list):\n\t\t\treturn [getItemStruct(i, v, getItems(i, v)) for i, v in enumerate(val)]\n\t\t\n\t\telse:\n\t\t\treturn []\n\n\treturn [getItemStruct(k, v, getItems(k, v)) for k, v in jsonContent.items()]",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          },
+          "props.style.maxHeight": {
+            "binding": {
+              "config": {
+                "path": "this.props.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"unset\" if len(value) \u003e 1 else \"25px\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "appearance": {
+            "defaultNodeIcons": {
+              "collapsed": {
+                "color": "--icon"
+              },
+              "empty": {
+                "color": "--icon"
+              },
+              "expanded": {
+                "color": "--icon"
+              }
+            },
+            "expandIcons": {
+              "collapsed": {
+                "color": "--icon",
+                "path": "material/arrow_right"
+              },
+              "empty": {
+                "color": "--icon"
+              },
+              "expanded": {
+                "color": "--icon",
+                "path": "material/arrow_drop_down"
+              }
+            }
+          },
+          "style": {
+            "borderStyle": "solid",
+            "borderWidth": 1
+          }
+        },
+        "type": "ia.display.tree"
+      },
+      {
+        "meta": {
+          "name": "Invalid JSON Label"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "coalesce({view.custom.jsonContent}, \"\") \u003d \"\""
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.emptyMessage"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "textStyle": {
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

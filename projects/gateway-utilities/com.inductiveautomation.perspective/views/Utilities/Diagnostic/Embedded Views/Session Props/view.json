@@ -1,0 +1,71 @@
+{
+  "custom": {},
+  "params": {
+    "refresh": false
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "struct": {
+            "polling": "now(5000)",
+            "refresh": "{view.params.refresh}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tdata \u003d {\n\t\t\t\u0027custom\u0027: General.Conversion.convert_properties_to_dictionary(self.session.custom),\n\t\t\t\u0027props\u0027: General.Conversion.convert_properties_to_dictionary(self.session.props)\n\t\t}\n\treturn data",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": false
+    },
+    "params.refresh": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "JSON"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.jsonObject": {
+            "binding": {
+              "config": {
+                "path": "view.custom.data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "jsonString": null,
+            "obscureValues": false
+          },
+          "path": "Utilities/JSON Object Viewer"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "domId": "General.Diagnostic.Session-Props",
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

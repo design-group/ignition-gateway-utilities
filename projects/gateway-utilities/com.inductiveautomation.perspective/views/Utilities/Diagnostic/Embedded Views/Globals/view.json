@@ -1,0 +1,426 @@
+{
+  "custom": {
+    "key": "BreadcrumbPaths"
+  },
+  "params": {},
+  "propConfig": {
+    "custom.key": {
+      "binding": {
+        "config": {
+          "expression": "\u0027\u0027"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 556,
+      "width": 682
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "36px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "expression": "now(1000)"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn General.Conversion.convert_list_to_dropdown(system.util.globals.keys())",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.key"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.key} \u003d \u0027event_managers\u0027 ||\r\n{view.custom.key} \u003d \u0027eventDefinitions\u0027"
+              },
+              "type": "expr"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "key": "{view.custom.key}",
+                  "polling": "now(1000)"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tglobalValues \u003d system.util.globals.get(value.key)\n\t\n\tif value.key \u003d\u003d \u0027event_managers\u0027:\n\t\treturn [{\u0027Session ID\u0027:key} for key in globalValues.keys()]\n\t\n\telif value.key \u003d\u003d \u0027eventDefinitions\u0027:\n\t\treturn [{\u0027EventID\u0027:key, \u0027Definition\u0027:value[\u0027data\u0027],\u0027lastModifiedTime\u0027: value[\u0027lastModifiedTime\u0027]} for key, value in globalValues.items()]\n\t\t\t\n\telse:\n\t\t[{}]",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "top",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "EventID",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "ascending",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Definition",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "top",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "lastModifiedTime",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            }
+          ],
+          "dragOrderable": false,
+          "pager": {
+            "bottom": false
+          },
+          "selection": {
+            "enableRowSelection": false
+          },
+          "virtualized": false
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tsessionID \u003d self.getSibling(\"Table\").props.selection.data[0][\u0027Session ID\u0027]\n\tEventManagement.EventManager.delete_EventManager(sessionID)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "domId": "deleteButton",
+          "name": "delete"
+        },
+        "position": {
+          "basis": "34px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.key} \u003d \u0027event_managers\u0027"
+              },
+              "type": "expr"
+            }
+          },
+          "props.enabled": {
+            "binding": {
+              "config": {
+                "expression": "{../Table.props.selection.selectedRow} !\u003d None"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "text": "Delete Event Manager"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "JSON Object Viewer"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.jsonObject": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "key": "{view.custom.key}",
+                  "polling": "now(1000)"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tdata \u003d system.util.globals.get(value.key, \u0027\u0027)\n\tif data is None:\n\t\treturn {\u0027error_response\u0027: \u0027Global key is NoneType\u0027}\n\telif data \u003d\u003d \u0027\u0027:\n\t\treturn {\u0027error_response\u0027: \u0027Global key is an Empty String\u0027}\n\treturn data",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "jsonString": null,
+            "obscureValues": false
+          },
+          "path": "Utilities/JSON Object Viewer"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\t\n\tkeyType \u003d type(system.util.globals[self.view.custom.key])\n\t\n\tsystem.util.globals[self.view.custom.key] \u003d keyType()"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "domId": "deleteButton",
+          "name": "clearGlobals"
+        },
+        "position": {
+          "basis": "34px",
+          "shrink": 0
+        },
+        "props": {
+          "text": "Clear Global Key"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "domId": "General.Diagnostic.Globals",
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -233,22 +233,6 @@ def sort_list_by_alpha_numeric(the_list, key='label'):
 		return sorted(the_list, key=lambda val: (re.sub(r'\d+', "", val.get(key)), 
 						int(re.sub(r'\D+', "", val.get(key)) or 0)))
 
-def round_to_next_hour(datetime):
-	"""
-	DESCRIPTION: Rounds value up to the nearest hour
-	PARAMETERS: datetime (REQ, datetime): The value to be rounded up
-	RETURNS: java.util.Date: The rounded up value
-	"""
-	year = system.date.getYear(datetime)
-	day_of_year = system.date.getDayOfYear(datetime)
-	hour_plus_one = system.date.getHour24(datetime) + 1
-	
-	# this ticks the date over if the hour is rounded to midnight
-	if hour_plus_one == 0 or hour_plus_one == 24:
-		day_of_year += 1
-	
-	return system.date.parse("%s-%s %s:00:00" % (year, day_of_year, hour_plus_one), "y-D k:m:s")
-
 def get_from_path(obj, path):
 	"""
 	DESCRIPTION: Splits path and adds each part of path to a return value associated with the object
@@ -282,14 +266,6 @@ def combine_objects(base_dict, dict_to_merge, prepend_list=False):
 		else:
 			base_dict[k] = dict_to_merge[k]
 	return base_dict
-
-def get_millis_time():
-	"""
-	DESCRIPTION: Returns the current time in milliseconds
-	PARAMETERS: None
-	RETURNS: int: The current time in milliseconds
-	"""
-	return system.date.toMillis(system.date.now())
 
 def is_number(val):
 	"""

@@ -1,0 +1,156 @@
+{
+  "custom": {
+    "dropdownPaths": [
+      {
+        "label": "Globals",
+        "urlParam": "globals",
+        "value": "Utilities/Diagnostic/Embedded Views/Globals"
+      },
+      {
+        "label": "Session Props",
+        "urlParam": "session-props",
+        "value": "Utilities/Diagnostic/Embedded Views/Session Props"
+      }
+    ],
+    "embedded_view": "Utilities/Diagnostic/Embedded Views/Globals",
+    "showDebugContent": null
+  },
+  "params": {},
+  "propConfig": {
+    "custom.dropdownPaths": {
+      "persistent": true
+    },
+    "custom.embedded_view": {
+      "binding": {
+        "config": {
+          "struct": {
+            "dropdownPaths": "{view.custom.dropdownPaths}",
+            "urlParams": "{page.props.urlParams}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tselectionParam \u003d value.urlParams.get(\"selection\")\n\tfor item in value.dropdownPaths:\n\t\tif item.get(\"urlParam\") \u003d\u003d selectionParam:\n\t\t\treturn item.get(\"value\")\n\treturn value.dropdownPaths[0].get(\"value\")",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.showDebugContent": {
+      "binding": {
+        "config": {
+          "path": "session.custom.debugging.showDebugContent"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d True:\n\t\tsystem.perspective.openDock(\"dockedDiagnostics\")\n\telse:\n\t\tsystem.perspective.closeDock(\"dockedDiagnostics\")\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 437,
+      "width": 455
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tvalue \u003d self.props.value\n\tpaths \u003d self.view.custom.dropdownPaths\n\t\n\tfor item in paths:\n\t\tif item.get(\"value\") \u003d\u003d value:\n\t\t\tselectionParam \u003d item.get(\"urlParam\")\n\t\t\tsystem.perspective.navigate(page\u003d\"diagnostics?selection\u003d%s\" % selectionParam)\n\t\t\treturn\n\tsystem.perspective.navigate(page\u003d\"diagnostic-viewer\")"
+              },
+              "enabled": false,
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "36px"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "path": "view.custom.dropdownPaths"
+              },
+              "transforms": [
+                {
+                  "code": "\toptions \u003d []\n\tfor item in value:\n\t\tnewItem \u003d dict(item)\n\t\tnewItem.pop(\"urlParam\")\n\t\toptions.append(newItem)\n\treturn options",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.embedded_view"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "view.custom.embedded_view"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "jsonObject": null,
+            "jsonString": null,
+            "obscureValues": false
+          },
+          "style": {
+            "backgroundColor": "white",
+            "margin": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "domId": "General.Diagnostic.Diagnostic Viewer",
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "background": "linear-gradient(42deg, rgba(226,238,247,1) 0%, rgba(210,228,242,1) 19%, rgba(118,187,249,1) 86%, rgba(10,135,251,1) 100%)"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

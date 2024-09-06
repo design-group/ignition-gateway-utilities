@@ -1,0 +1,149 @@
+{
+  "custom": {
+    "json": null
+  },
+  "params": {
+    "boolStyle": "color:var(--qual-9);font-size:1.1em",
+    "indent": 2,
+    "json": null,
+    "keyStyle": "font-weight:bold;",
+    "nullStyle": "color:var(--error);font-size:1.1em;font-style:italic",
+    "numericStyle": "font-weight:bold;color:var(--qual-7);font-size:1.1em",
+    "rowData": {
+      "Payload": null
+    },
+    "stringStyle": "color:var(--qual-2);font-weight:bold",
+    "subView": false,
+    "symbolStyle": "color:var(--qual-10);font-size:1.1em",
+    "value": {
+      "Payload": null
+    }
+  },
+  "propConfig": {
+    "custom.json": {
+      "binding": {
+        "config": {
+          "expression": "coalesce({view.params.value.Payload}, {view.params.rowData.Payload}, {view.params.json})"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.test": {
+      "persistent": true
+    },
+    "params.boolStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.indent": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.json": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.keyStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.nullStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.numericStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.stringStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.subView": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.symbolStyle": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 45,
+      "width": 500
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onDoubleClick": {
+              "config": {
+                "script": "\tsystem.perspective.print(self.view.custom.json)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Markdown"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.source": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "boolStyle": "{view.params.boolStyle}",
+                  "indent": "{view.params.indent}",
+                  "json": "{view.custom.json}",
+                  "keyStyle": "{view.params.keyStyle}",
+                  "nullStyle": "{view.params.nullStyle}",
+                  "numericStyle": "{view.params.numericStyle}",
+                  "stringStyle": "{view.params.stringStyle}",
+                  "symbolStyle": "{view.params.symbolStyle}"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\timport json, re\n\tif not value.json:\n\t\treturn \"\"\n\ttry:\n\n\t\ttry:\n\t\t\tjsonStr \u003d json.dumps(json.loads(value.json), indent\u003dvalue.indent)\n\t\texcept TypeError as e:\n\t\t\tjson_value \u003d General.Conversion.convertPropertiesToDictionary(value.json)\n\t\t\tjsonStr \u003d json.dumps(json_value, indent\u003dvalue.indent)\n\t\t\n\t\t# pretty print json\n\t\tjsonText \u003d \u0027\u003cpre\u003e\u003ccode\u003e\u0027 + jsonStr + \u0027\u003c/pre\u003e\u003c/code\u003e\u0027\n\t\t\n\t\t# strings\n\t\tjsonText \u003d re.sub(r\u0027(\".*\"): (\".*\")\u0027, r\"\u003cspan style\u003d\u0027%s\u0027\u003e\\1\u003c/span\u003e: \u003cspan style\u003d\u0027%s\u0027\u003e\\2\u003c/span\u003e\" %(value.keyStyle, value.stringStyle), jsonText)\n\t\tjsonText \u003d re.sub(r\u0027(\\s+)(\".*\")([,\\s]*\\n)\u0027, r\"\\1\u003cspan style\u003d\u0027%s\u0027\u003e\\2\u003c/span\u003e\\3\" %value.stringStyle, jsonText)\n\t\t\n\t\t# numerics\n\t\tjsonText \u003d re.sub(r\u0027(\\s+)([\\d-][\\d.-e+]*(?:[,\\s]*\\n))\u0027, r\"\\1\u003cspan style\u003d\u0027%s\u0027\u003e\\2\u003c/span\u003e\" %value.numericStyle, jsonText)\n\n\t\t# booleans\n\t\tjsonText \u003d re.sub(r\u0027(\\s+)((?:true)|(?:false)(?:[,\\s]))\u0027, r\"\\1\u003cspan style\u003d\u0027%s\u0027\u003e\\2\u003c/span\u003e\" %value.boolStyle, jsonText)\n\n\t\t# nulls\n\t\tjsonText \u003d re.sub(r\u0027(\\s+)(null)([\\n,\\r]+)\u0027, r\"\\1\u003cspan style\u003d\u0027%s\u0027\u003e\\2\u003c/span\u003e\\3\" %value.nullStyle, jsonText)\n\n\t\t# keys\n\t\tjsonText \u003d re.sub(r\u0027(\".*\"):\u0027, r\"\u003cspan style\u003d\u0027%s\u0027\u003e\\1\u003c/span\u003e:\" %value.keyStyle, jsonText)\n\t\t\n\t\t# symbols\n\t\tjsonText \u003d re.sub(r\u0027(\\[\\]|{})([\\n,\\r]+)\u0027, r\"\u003cspan style\u003d\u0027%s\u0027\u003e\\1\u003c/span\u003e\\2\" %value.symbolStyle, jsonText)\n\t\tjsonText \u003d re.sub(r\u0027([{}\\[\\]])([\\n,\\r]+)\u0027, r\"\u003cspan style\u003d\u0027%s\u0027\u003e\\1\u003c/span\u003e\\2\" %value.symbolStyle, jsonText)\n\t\tjsonText \u003d re.sub(r\u0027(\\n[{}\\[\\]])\u0027, r\"\u003cspan style\u003d\u0027%s\u0027\u003e\\1\u003c/span\u003e\" %value.symbolStyle, jsonText)\n\t\t\n\t\t\n\t\treturn jsonText\n\texcept Exception as e:\n\t\treturn str(e)",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          }
+        },
+        "props": {
+          "markdown": {
+            "escapeHtml": false
+          }
+        },
+        "type": "ia.display.markdown"
+      }
+    ],
+    "meta": {
+      "domId": "General.Diagnostic.Embedded Views.JSON",
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "custom": {
+    "serializedContent": "test\\test"
+  },
+  "params": {
+    "icon": "material/content_copy",
+    "iconColor": "--icon",
+    "text": "test\\test"
+  },
+  "propConfig": {
+    "custom.serializedContent": {
+      "binding": {
+        "config": {
+          "path": "view.params.text"
+        },
+        "transforms": [
+          {
+            "code": "\tcontent \u003d General.Conversion.convert_properties_to_dictionary(value)\n\tif isinstance(content, (dict, list)):\n\t\treturn system.util.jsonEncode(content)\n\telse:\n\t\treturn content\t\t\n\t",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.icon": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.iconColor": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.text": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 50
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "IFrame"
+                },
+                "position": {
+                  "height": 1,
+                  "width": 1
+                },
+                "propConfig": {
+                  "props.src": {
+                    "binding": {
+                      "config": {
+                        "struct": {
+                          "text": "{view.custom.serializedContent}",
+                          "theme": "{session.props.theme}"
+                        },
+                        "waitOnAll": true
+                      },
+                      "transforms": [
+                        {
+                          "code": "\t# Format text and prevent JavaScript injection\n\tdef escape_html(s, quote\u003dNone):\n\t    \u0027\u0027\u0027Replace special characters \"\u0026\", \"\u003c\" and \"\u003e\" to HTML-safe sequences.\n\t    If the optional flag quote is true, the quotation mark character (\")\n\t    is also translated.\u0027\u0027\u0027\n\t    s \u003d s.replace(\"\u0026\", \"\u0026amp;\") # Must be done first!\n\t    s \u003d s.replace(\"\u003c\", \"\u0026lt;\")\n\t    s \u003d s.replace(\"\u003e\", \"\u0026gt;\")\n\t    if quote:\n\t        s \u003d s.replace(\u0027\"\u0027, \"\u0026quot;\")\n\t    return s\n\t\n\t# Sanitize variables for HTML/JS\n\tescape_js \u003d {\n\t    \u0027\\\\\u0027: \u0027\\\\\\\\\u0027,\n\t    \u0027\\\u0027\u0027: \u0027\\\\\\\u0027\u0027,\n\t    \u0027\\\"\u0027: \u0027\\\\\\\"\u0027,\n\t    \u0027\\n\u0027: \u0027\\\\n\u0027,\n\t    \u0027\\r\u0027: \u0027\\\\r\u0027,\n\t    \u0027\\t\u0027: \u0027\\\\t\u0027,\n\t    \u0027\\b\u0027: \u0027\\\\b\u0027,\n\t    \u0027\\f\u0027: \u0027\\\\f\u0027\n\t}\n\ttext_to_copy \u003d \u0027\u0027.join(escape_js.get(c, c) for c in value.text)\n\t\n\tescape_html \u003d {\n\t    \u0027\u0026\u0027: \u0027\u0026amp;\u0027,\n\t    \u0027\u003c\u0027: \u0027\u0026lt;\u0027,\n\t    \u0027\u003e\u0027: \u0027\u0026gt;\u0027,\n\t    \u0027\"\u0027: \u0027\u0026quot;\u0027\n\t}\n\t\n\tdata \u003d \"\"\"data:text/html;charset\u003dutf-8,\u003chtml\u003e\n\t\u003chead\u003e\n\t    \u003cmeta charset\u003d\"utf-8\"\u003e\n\t    \u003cmeta name\u003d\"viewport\" content\u003d\"width\u003ddevice-width, initial-scale\u003d1\"\u003e\n\t\u003c/head\u003e\n\t\u003cbody style\u003d\"width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; position: relative;\"\u003e\n\t    \u003cdiv id\u003d\"clickLayer\" style\u003d\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; opacity: 0;\"\n\t         onmousedown\u003d\"this.style.opacity \u003d \u00270.5\u0027; copyToClipboard(event)\"\n\t         onmouseover\u003d\"this.style.opacity \u003d \u00270.5\u0027;\"\n\t         onmouseout\u003d\"this.style.opacity \u003d \u00270\u0027;\"\n\t         onmouseup\u003d\"this.style.opacity \u003d \u00270\u0027;\"\u003e\n\t    \u003c/div\u003e\n\t    \u003cscript\u003e\n\t        function copyToClipboard() {{\n\t            var tempInput \u003d document.createElement(\u0027textarea\u0027);\n\t            tempInput.value \u003d \u0027{text}\u0027;\n\t            document.body.appendChild(tempInput);\n\t            tempInput.select();\n\t            document.execCommand(\u0027copy\u0027);\n\t            document.body.removeChild(tempInput);\n\t        }}\n\t    \u003c/script\u003e\n\t\u003c/body\u003e\n\t\u003c/html\u003e\n\t\"\"\".format(\n\t    text\u003dtext_to_copy\n\t)\n\t\n\treturn data",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr-struct"
+                    }
+                  }
+                },
+                "props": {
+                  "allowFullScreen": true,
+                  "style": {
+                    "zIndex": 99
+                  }
+                },
+                "type": "ia.display.iframe"
+              }
+            ],
+            "meta": {
+              "name": "Wrapper"
+            },
+            "position": {
+              "height": 1,
+              "width": 1
+            },
+            "props": {
+              "mode": "percent",
+              "style": {
+                "zIndex": 99
+              }
+            },
+            "type": "ia.container.coord"
+          },
+          {
+            "meta": {
+              "name": "Icon"
+            },
+            "position": {
+              "height": 1,
+              "width": 1
+            },
+            "propConfig": {
+              "props.color": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.iconColor"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "material/content_copy",
+              "style": {
+                "zIndex": 1
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "CoordinateContainer"
+        },
+        "position": {
+          "grow": 1
+        },
+        "props": {
+          "mode": "percent"
+        },
+        "type": "ia.container.coord"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "visible"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}
