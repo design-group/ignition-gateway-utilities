@@ -12,6 +12,7 @@ import argparse
 import json
 import logging
 import sys
+import re
 from collections import OrderedDict
 from pathlib import Path
 
@@ -56,30 +57,17 @@ python3 view_param_editor.py --dump --purge --format-files
 
 
 def preserve_unicode_escapes(text):
-	"""Preserve specific Unicode escapes in JSON content.
-
-	Args:
-		text (str): Raw JSON content.
-
-	Returns:
-		str: Content with Unicode escapes replaced by placeholders.
-	"""
+	"""Preserve specific Unicode escapes in JSON content."""
 	for escape, placeholder in UNICODE_REPLACEMENTS.items():
-		text = text.replace(escape, placeholder)
+		text = re.sub(escape, placeholder, text)
 	return text
 
 
 def restore_unicode_escapes(text):
-	"""Restore Unicode escapes from placeholders.
-
-	Args:
-		text (str): JSON content with placeholders.
-
-	Returns:
-		str: Content with placeholders replaced by Unicode escapes.
-	"""
+	"""Restore Unicode escapes from placeholders."""
 	for placeholder, escape in UNICODE_RESTORE.items():
-		text = text.replace(placeholder, escape)
+		# We need to use a raw string for the replacement to handle backslashes properly
+		text = text.replace(placeholder, escape.replace('\\\\', '\\'))
 	return text
 
 
