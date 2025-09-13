@@ -71,6 +71,9 @@ CREATE TABLE UserPreferences (
     CONSTRAINT [PK_UserPreferences] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [UQ_UserPreferences_username] UNIQUE NONCLUSTERED ([username] ASC)
 );
+
+-- Index for fast username lookups (redundant with UNIQUE constraint but explicit)
+CREATE NONCLUSTERED INDEX [IX_UserPreferences_username] ON UserPreferences ([username] ASC);
 ```
 
 ### Named Query - Get User Preferences
@@ -116,7 +119,10 @@ CREATE TABLE user_preferences
     user_settings jsonb,
     CONSTRAINT pk_user_preferences PRIMARY KEY (id),
     CONSTRAINT uq_user_preferences_username UNIQUE (username)
-)
+);
+
+-- Index for fast username lookups
+CREATE INDEX idx_user_preferences_username ON user_preferences (username);
 ```
 
 ### Named Query - Get User Preferences
