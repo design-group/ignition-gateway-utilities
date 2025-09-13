@@ -39,7 +39,6 @@ def handleMessage(payload):
 
 """
 import csv
-import General.Utilities
 import os
 from copy import deepcopy
 

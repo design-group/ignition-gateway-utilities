@@ -3,7 +3,6 @@ General.Perspective.Table
 
 This script contains functions used with table components.
 """
-import General.Conversion
 
 def export_table_to_xlsx(table):
 	"""

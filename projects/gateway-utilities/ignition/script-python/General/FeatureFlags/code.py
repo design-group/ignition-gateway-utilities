@@ -5,8 +5,6 @@ This module provides a way to enable/disable features in Ignition.
 This is useful for testing new features or hiding features that are not yet ready for production.
 
 """
-import General.Files
-import General.Utilities
 
 LOGGER = system.util.getLogger("General.FeatureFlags")
 FEATURE_FLAG_CONFIG_PATH = "data/feature-flags.json"
