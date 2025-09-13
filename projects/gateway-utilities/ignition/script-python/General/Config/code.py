@@ -3,9 +3,6 @@ General.Config
 
 This module provides functions for retrieving configuration files from the gateway.
 """
-import General.Files
-import General.Utilities
-
 LOGGER = system.util.getLogger("General.Config")
 CONFIG_SOURCE_DIRECTORY = "data/configs/"
 

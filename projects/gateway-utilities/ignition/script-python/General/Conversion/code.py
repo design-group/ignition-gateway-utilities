@@ -7,47 +7,69 @@ This module should not have any dependencies on any other Ignition modules.
 """
 import re
 import collections
+from java.util import Date as JavaDate
 
 LOGGER = system.util.getLogger("General.Conversion")
 
-def convert_dataset_to_list(dataset):
+
+def convert_dataset_to_list(dataset, date_to_millis=False):
 	"""
 	DESCRIPTION: This function converts a dataset to a list of dictionaries 
 	PARAMETERS: dataset (REQ, dataset): The dataset to be converted to a list of dictionaries
-	RETURNS: list (list): The list of dictionaries
+				date_to_millis (OPT, bool): True if the date should be converted to milliseconds
 	"""
 	LOGGER.trace("convert_dataset_to_list(dataset=%s)" % (dataset))
-	if dataset is None:
-		return dataset
-	if isinstance(dataset, collections.Iterable):
-		return dataset
-	if isinstance(dataset, (int, long)):
-		return dataset
-	if isinstance(dataset, str):
+
+	if not hasattr(dataset, "getColumnNames"):
 		return dataset
 
 	column_names = dataset.getColumnNames()
 
 	data = []
-	
+
 	for row in range(dataset.getRowCount()):
 		row_data = {}
 		for column in range(dataset.getColumnCount()):
-			row_data[column_names[column]] = dataset.getValueAt(row, column)
+			value = dataset.getValueAt(row, column)
+			if date_to_millis and value and isinstance(value, JavaDate):
+				value = system.date.toMillis(value)
+
+			row_data[column_names[column]] = value
 		data.append(row_data)
 	return data
+
 
 def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None, headers_list=None):
 	"""
 	DESCRIPTION: This function converts list of dictionaries to a dataset
 	PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
 				titalize_headers (OPT, bool): True in the case of the ability to get the names of the header in list_var
-				column_order (OPT, list): The order of the columns in the dataset
-				headers_list (OPT, list): The list of headers to be used in the dataset
-	RETURNS: dataset (dataset): The dataset created from the list of dictionaries
+				column_order (OPT, list): List of columns to include and their order in the resulting dataset
+				headers_list (OPT, list): List of headers to use instead of keys from list_var
+	RETURN: Compiled dataset from the list of dictionaries
 	"""
-	LOGGER.trace("convert_list_to_dataset(list_var=%s)" % (list_var))
-	if not isinstance(list_var, collections.Iterable):
+
+	def type_conversion(value, target_type, allow_mixed=False):
+		"""
+		DESCRIPTION: This function converts list of dictionaries to a dataset
+		PARAMETERS: list_var (REQ, list): The list of dictionaries to be converted
+					titalize_headers (OPT, bool): True in the case of the ability to get the names of the header in list_var
+					column_order (OPT, list): List of columns to include and their order in the resulting dataset
+					headers_list (OPT, list): List of headers to use instead of keys from list_var
+		"""
+		if value is None:
+			return None
+		#NOTE: If the value is already the target type, return it
+		if isinstance(value, target_type):
+			return value
+		#NOTE: Attempt to convert the value to the target type
+		try:
+			return target_type(value)
+		except (ValueError, TypeError):
+			#NOTE: Return original value if mixed types are allowed, otherwise None
+			return value if allow_mixed else None
+
+	if not isinstance(list_var, collections.Iterable) or not list_var:
 		return list_var
 
 	if headers_list is not None:
@@ -55,52 +77,70 @@ def convert_list_to_dataset(list_var, titalize_headers=False, column_order=None,
 	elif column_order is not None:
 		headers = column_names = column_order
 	else:
-		headers = column_names = list_var[0].keys()
-			
+		headers = column_names = sorted(list_var[0].keys())
+
 	if titalize_headers:
 		headers = [name.title() for name in column_names]
-		
-	
+
+	#NOTE: Determine types for each column
+	key_type_map = {}
+	key_mixed_types = {}
+	for key in column_names:
+		types = {type(row.get(key)) for row in list_var if row.get(key) is not None}
+		if float in types:
+			types = {float}
+
+		#NOTE: Check if we have mixed types (excluding None)
+		key_mixed_types[key] = len(types) > 1
+
+		#NOTE: If we have mixed types, default to string
+		if key_mixed_types[key]:
+			key_type_map[key] = str
+		else:
+			key_type_map[key] = list(types)[0] if types else str
+
 	data = []
-	
 	for row in list_var:
 		row_data = []
 		for column in column_names:
-			# NOTE: Check to see if key value has a value with styling applied, and only return the value
-			if hasattr(row[column], 'value') and hasattr(row[column], 'style'):
-				value = str(row[column]['value']) if row[column]['value'] is not None else None
-			else:
-				value = str(row[column]) if row[column] is not None else None
-			row_data.append(value)
+			value = row.get(column)
+			#NOTE: Handle styled values
+			if hasattr(value, "get"):
+				value = value.get("value")
+
+			#NOTE: Use allow_mixed=True for columns with mixed types
+			row_data.append(type_conversion(value, key_type_map[column], allow_mixed=key_mixed_types[column]))
+
 		data.append(row_data)
+
 	return system.dataset.toDataSet(headers, data)
+
 
 def convert_properties_to_dictionary(obj):
 	"""
 	DESCRIPTION: Converts properties from the view into a dictionary, if possible
 	PARAMETERS: obj (REQ, object): The properties to be converted
-	RETURNS: dict (dict): The dictionary of the properties
 	"""
 	LOGGER.trace("convert_properties_to_dictionary(obj=%s)" % (obj))
 
 	if obj is None:
 		return None
 
-	# NOTE: If this is a basic qualified value, and not a dictionary with the key 'value', 
-	# then replace the object with its value
-	if hasattr(obj, 'value') and not hasattr(obj, 'keys'):
+	#NOTE: If this is a basic qualified value, and not a dictionary with the key "value",
+	#NOTE: then replace the object with its value
+	if hasattr(obj, "value") and not hasattr(obj, "keys"):
 		obj = obj.value
 
-	# NOTE: Then check for any kind of dictionary or list
-	if hasattr(obj, '__iter__'):
-		if hasattr(obj, 'keys'):
+	#NOTE: Then check for any kind of dictionary or list
+	if hasattr(obj, "__iter__"):
+		if hasattr(obj, "keys"):
 			return dict((k, convert_properties_to_dictionary(obj[k])) for k in obj.keys())
 		else:
 			return list(convert_properties_to_dictionary(x) for x in obj)
 	else:
-		# anything else
+		#NOTE: anything else
 		return obj
-	
+
 def convert_from_camel_case_to_caps(string):
 	"""
 	DESCRIPTION: Converts a string from camel case to all caps
@@ -110,7 +150,7 @@ def convert_from_camel_case_to_caps(string):
 	LOGGER.trace("convert_from_camel_case_to_caps(string=%s)" % (string))
 	return re.sub("([a-z])([A-Z])", r"\g<1> \g<2>", string).capitalize()
 
-def convert_snake_case_to_camel_case(string):	
+def convert_snake_case_to_camel_case(string):
 	"""
 	DESCRIPTION: Converts a string from snake case (standard within scripts) to camel case (standard within Ignition props)
 	PARAMETERS: string (REQ, string): The string to be converted
@@ -118,7 +158,7 @@ def convert_snake_case_to_camel_case(string):
 	"""
 	string = "".join(char.capitalize() for char in string.lower().split("_"))
 	return string[0].lower() + string[1:]
-	
+
 def convert_list_to_dropdown(options):
 	"""
 	DESCRIPTION: Creates a list of dictionaries for each object to allow for a dropdown option
@@ -144,7 +184,7 @@ def convert_dict_to_dropdown(options):
 	dropdown_options = []
 	for key in options.keys():
 		dropdown_options = [{"label": val, "value": key} for key, val in options.iteritems()]
-	return sorted(dropdown_options, key=lambda opt: opt['value'])
+	return sorted(dropdown_options, key=lambda opt: opt["value"])
 
 def convert_seconds_to_str_format(seconds):
 	"""

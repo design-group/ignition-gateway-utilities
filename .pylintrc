@@ -6,6 +6,8 @@
 #   https://google.github.io/styleguide/pylintrc
 
 [MASTER]
+# Add this to enable Python 2 compatibility mode
+py-version = 2.7
 
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=third_party

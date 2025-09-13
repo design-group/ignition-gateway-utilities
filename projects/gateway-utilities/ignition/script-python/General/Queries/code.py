@@ -9,12 +9,12 @@ import json
 
 LOGGER = system.util.getLogger("General.Queries")
 
-def run_named_query(path, as_json=True, params=None):
+def run_named_query(path, params=None, as_json=True):
 	"""
 	DESCRIPTION: runs a named query provided parameters and a path, returns response in JSON
 	PARAMETERS: path (REQ, string): path to the named query to be run
-				as_json (OPT, bool): flag for return obj type (True=JSON, False=Dataset)
 				params (OPT, dict): parameters for the query to use
+				as_json (OPT, bool): flag for return obj type (True=JSON, False=Dataset)
 	RETURNS: dict: response from the named query or dataset if as_json is False
 	"""
 	project = system.project.getProjectName()
