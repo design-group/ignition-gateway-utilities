@@ -1,3 +1,18 @@
+> # ➡️ This repository has moved
+>
+> **`design-group/ignition-gateway-utilities` is no longer maintained here.**
+>
+> Active development now lives in the **BW Design Group** organization:
+>
+> ### 👉 [github.com/bw-design-group/ignition-gateway-utilities](https://github.com/bw-design-group/ignition-gateway-utilities)
+>
+> The new repository is kept current with supported Ignition versions and is where all releases, issues, and pull requests are handled going forward. Please update your bookmarks, links, and any CI references.
+>
+> This repository is kept read-only for historical reference only.
+
+---
+
+<!-- Original README preserved below for reference -->
 ## Ignition Gateway Utilities
 This repository is a collection of utilities for developing in Ignition. The utilities are designed to be run in parallel to the existing project, and can add features like config file access, feature flagging, and more.
 
